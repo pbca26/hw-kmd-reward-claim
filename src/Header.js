@@ -1,5 +1,5 @@
 import React from 'react';
-import { ReactComponent as KmdIcon } from 'cryptocurrency-icons/svg/color/kmd.svg';
+import KmdIcon from 'cryptocurrency-icons/svg/color/kmd.svg';
 import './Header.scss';
 
 const Header = ({children}) => (
@@ -8,7 +8,7 @@ const Header = ({children}) => (
 
       <div className="navbar-brand">
         <div className="navbar-item">
-          <KmdIcon className="KmdIcon"/>
+          <img src={KmdIcon} className="KmdIcon"/>
         </div>
         <h1 className="navbar-item">
           <strong>Ledger KMD Reward Claim</strong>
