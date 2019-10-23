@@ -1,4 +1,5 @@
-import React from 'react';
+import 'babel-polyfill';
+import React, { Fragment } from 'react';
 import {hot} from 'react-hot-loader';
 import {isEqual} from 'lodash';
 import Header from './Header';
@@ -41,14 +42,14 @@ class App extends React.Component {
 
         <section className="main">
           {this.state.accounts.length === 0 ? (
-            <>
+            <React.Fragment>
               <div className="container content">
                 <h2>Claim your KMD rewards on your Ledger device.</h2>
                 <h4>As a gift to the community, we have decided to make this service free! There is no longer a fee to claim rewards. ❤️</h4>
                 <p>Make sure the KMD app and firmware on your Ledger are up to date, then connect your Ledger, open the KMD app, and click the "Check Rewards" button.</p>
               </div>
               <img className="ledger-graphic" src="ledger.svg" alt="Ledger Nano S"/>
-            </>
+            </React.Fragment>
           ) : (
             <Accounts {...this.state} />
           )}
