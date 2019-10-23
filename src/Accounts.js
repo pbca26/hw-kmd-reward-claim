@@ -52,13 +52,13 @@ class Account extends React.Component {
               </small>
             </h2>
             {(utxos.length > 0) && (
-              <>
+              <React.Fragment>
                 <h4>UTXOs</h4>
                 <Utxos utxos={utxos} tiptime={tiptime} />
-              </>
+              </React.Fragment>
             )}
             {isClaimableAmount && (
-              <>
+              <React.Fragment>
                 <h4>Breakdown</h4>
                 <table className="breakdown">
                   <tbody>
@@ -82,7 +82,7 @@ class Account extends React.Component {
                     </tr>
                   </tbody>
                 </table>
-              </>
+              </React.Fragment>
             )}
             {(isClaimed && claimTxid) && (
               <div className="is-pulled-right">

@@ -110,7 +110,7 @@ class ClaimRewardsButton extends React.Component {
 
       this.props.handleRewardClaim(txid);
       this.setState({
-        success: <>Claim TXID: <TxidLink txid={txid}/></>
+        success: <React.Fragment>Claim TXID: <TxidLink txid={txid}/></React.Fragment>
       });
     } catch (error) {
       updateActionState(this, currentAction, false);
@@ -124,7 +124,7 @@ class ClaimRewardsButton extends React.Component {
     const [userOutput, feeOutput] = this.getOutputs();
 
     return (
-      <>
+      <React.Fragment>
         <button className="button is-primary" disabled={this.props.isClaimed || !isClaimableAmount} onClick={this.claimRewards}>
           {this.props.children}
         </button>
@@ -136,11 +136,11 @@ class ClaimRewardsButton extends React.Component {
           <p>
             You should receive a total of <strong>{humanReadableSatoshis(userOutput.value)} KMD</strong> to the new unused address: <strong>{userOutput.address}</strong><br />
             {feeOutput ? (
-              <>There will also be a {SERVICE_FEE_PERCENT}% service fee of <strong>{humanReadableSatoshis(feeOutput.value)} KMD</strong> to: <strong>{feeOutput.address}</strong></>
+              <React.Fragment>There will also be a {SERVICE_FEE_PERCENT}% service fee of <strong>{humanReadableSatoshis(feeOutput.value)} KMD</strong> to: <strong>{feeOutput.address}</strong></React.Fragment>
             ) : null}
           </p>
         </ActionListModal>
-      </>
+      </React.Fragment>
     );
   }
 }
