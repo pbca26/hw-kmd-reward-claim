@@ -4,7 +4,6 @@ import buildOutputScript from 'build-output-script';
 import bip32Path from 'bip32-path';
 import createXpub from 'create-xpub';
 import TrezorConnect from 'trezor-connect';
-import {SERVICE_FEE_ADDRESS} from '../constants';
 
 let vendor;
 
@@ -142,13 +141,11 @@ const createTransaction = async function(utxos, outputs) {
       });
     }
 
-    for (let i = 0; i < outputs.length; i++) {
-      tx.outputs.push({
-        address: outputs[i].address,
-        amount: outputs[i].value.toString(),
-        script_type: 'PAYTOADDRESS',
-      });
-    }
+    tx.outputs.push({
+      address: outputs[0].address,
+      amount: outputs[0].value.toString(),
+      script_type: 'PAYTOADDRESS',
+    });
 
     for (let i = 0; i < utxos.length; i++) {
       if (uniqueTxids.indexOf(utxos[i].txid) === -1) {
