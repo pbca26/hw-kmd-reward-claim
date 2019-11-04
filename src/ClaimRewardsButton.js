@@ -19,7 +19,7 @@ class ClaimRewardsButton extends React.Component {
       actions: {
         connect: {
           icon: 'fab fa-usb',
-          description: <div>Connect and unlock your Ledger, then open the Komodo app on your device.</div>,
+          description: this.props.vendor === 'ledger' ? <div>Connect and unlock your Ledger, then open the Komodo app on your device.</div> : <div>Connect and unlock your Trezor.</div>,
           state: null
         },
         confirmAddress: {
@@ -82,7 +82,7 @@ class ClaimRewardsButton extends React.Component {
       updateActionState(this, currentAction, 'loading');
       const ledgerIsAvailable = await ledger.isAvailable();
       if (!ledgerIsAvailable) {
-        throw new Error('Ledger device is unavailable!');
+        throw new Error((this.props.vendor === 'ledger' ? 'Ledger' : 'Trezor') + ' device is unavailable!');
       }
       updateActionState(this, currentAction, true);
 
@@ -93,7 +93,7 @@ class ClaimRewardsButton extends React.Component {
       const verify = true;
       const ledgerUnusedAddress = await ledger.getAddress(derivationPath, verify);
       if(ledgerUnusedAddress !== unusedAddress) {
-        throw new Error(`Ledger derived address "${ledgerUnusedAddress}" doesn't match browser derived address "${unusedAddress}"`);
+        throw new Error((this.props.vendor === 'ledger' ? 'Ledger' : 'Trezor') + ` derived address "${ledgerUnusedAddress}" doesn't match browser derived address "${unusedAddress}"`);
       }
       updateActionState(this, currentAction, true);
 
@@ -101,11 +101,17 @@ class ClaimRewardsButton extends React.Component {
       updateActionState(this, currentAction, 'loading');
       const outputs = this.getOutputs();
       const rewardClaimTransaction = await ledger.createTransaction(utxos, outputs);
+      if(!rewardClaimTransaction) {
+        throw new Error((this.props.vendor === 'ledger' ? 'Ledger' : 'Trezor') + ' failed to generate a valid transaction');
+      }
       updateActionState(this, currentAction, true);
 
       currentAction = 'broadcastTransaction';
       updateActionState(this, currentAction, 'loading');
       const {txid} = await blockchain.broadcast(rewardClaimTransaction);
+      if(!txid || txid.length !== 64) {
+        throw new Error('Unable to broadcast transaction');
+      }
       updateActionState(this, currentAction, true);
 
       this.props.handleRewardClaim(txid);
@@ -136,7 +142,9 @@ class ClaimRewardsButton extends React.Component {
           <p>
             You should receive a total of <strong>{humanReadableSatoshis(userOutput.value)} KMD</strong> to the new unused address: <strong>{userOutput.address}</strong><br />
             {feeOutput ? (
-              <React.Fragment>There will also be a {SERVICE_FEE_PERCENT}% service fee of <strong>{humanReadableSatoshis(feeOutput.value)} KMD</strong> to: <strong>{feeOutput.address}</strong></React.Fragment>
+              <React.Fragment>
+                There will also be a {SERVICE_FEE_PERCENT}% service fee of <strong>{humanReadableSatoshis(feeOutput.value)} KMD</strong> to: <strong>{feeOutput.address}</strong>
+              </React.Fragment>
             ) : null}
           </p>
         </ActionListModal>

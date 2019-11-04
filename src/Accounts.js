@@ -89,7 +89,7 @@ class Account extends React.Component {
                 Claim TXID: <TxidLink txid={claimTxid}/>
               </div>
             )}
-            <ClaimRewardsButton account={account} handleRewardClaim={this.handleRewardClaim} isClaimed={this.state.isClaimed}>
+            <ClaimRewardsButton account={account} handleRewardClaim={this.handleRewardClaim} isClaimed={this.state.isClaimed} vendor={this.props.vendor}>
               Claim Rewards
             </ClaimRewardsButton>
           </div>
