@@ -134,8 +134,9 @@ class App extends React.Component {
                     <p>Make sure the KMD app and firmware on your Ledger are up to date, then connect your Ledger, open the KMD app, and click the "Check Rewards" button.</p>
                   }
                   {this.state.vendor === 'trezor' &&
-                    <p>Make sure the firmware on your Trezor are up to date, then connect your Trezor and click the "Check Rewards" button.</p>
+                    <p>Make sure the firmware on your Trezor are up to date, then connect your Trezor and click the "Check Rewards" button. Please be aware that you'll need to allow popup windows for Trezor to work properly.</p>
                   }
+                  <p>Also, make sure that your {this.state.vendor === 'ledger' ? 'Ledger' : 'Trezor'} is initialized prior using <strong>KMD Rewards Claim tool</strong>.</p>
                   </div>
                 <img className="ledger-graphic" src={`${this.state.vendor}-logo.png`} alt={this.state.vendor === 'ledger' ? 'Ledger' : 'Trezor'} />
               </React.Fragment>
