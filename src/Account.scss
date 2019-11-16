@@ -1,10 +1,10 @@
 @import './bulma-custom.scss';
 
+.Account.is-claimed > .box > .content > :not(.ActionListModal) {
+  opacity: 0.5;
+}
+
 .Account {
-  &.is-claimed > .box > .content > :not(.ActionListModal) {
-    opacity: 0.5;
-  }
-  
   h2 {
     .balance {
       font-weight: $weight-normal;

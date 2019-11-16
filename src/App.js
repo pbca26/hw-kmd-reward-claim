@@ -11,6 +11,7 @@ import {repository} from '../package.json';
 import './App.scss';
 import TrezorConnect from 'trezor-connect';
 import ledger from './lib/ledger';
+import {getLocalStorageVar, setLocalStorageVar} from './localstorage-util';
 
 class App extends React.Component {
   state = this.initialState;
@@ -20,14 +21,30 @@ class App extends React.Component {
       accounts: [],
       tiptime: null,
       vendor: null,
+      theme: getLocalStorageVar('settings') && getLocalStorageVar('settings').theme ? getLocalStorageVar('settings').theme : 'tdark',
     };
   }
 
   componentWillMount() {
+    TrezorConnect.on(DEVICE_EVENT, (event) => {
+      if (event.type === DEVICE.CONNECT) {
+        console.warn('trezor device connected', event);
+      } else if (event.type === DEVICE.DISCONNECT) {
+        console.warn('trezor device disconnected', event);
+      }
+    });
+
     TrezorConnect.manifest({
       email: 'developer@xyz.com',
       appUrl: 'http://your.application.com',
     });
+
+    if (!getLocalStorageVar('settings')) {
+      setLocalStorageVar('settings', { theme: 'tdark' });
+      document.getElementById('body').className = 'tdark';
+    } else {
+      document.getElementById('body').className = getLocalStorageVar('settings').theme;
+    }
   }
 
   resetState = () => {
@@ -38,11 +55,19 @@ class App extends React.Component {
 
   handleRewardData = ({accounts, tiptime}) => {
     this.setState({accounts, tiptime});
-  };
+  }
 
   setVendor = (vendor) => {
     this.setState({vendor});
-  };
+  }
+
+  setTheme(name) {
+    document.getElementById('body').className = name;
+    setLocalStorageVar('settings', { theme: name });
+    this.setState({
+      theme: name,
+    });
+  }
 
   vendorSelectorRender() {
     return (
@@ -83,6 +108,15 @@ class App extends React.Component {
             <br />
             View the <a target="_blank" rel="noopener noreferrer" href={`https://github.com/${repository}#usage`}>README</a> for usage instructions.
           </p>
+          <div className="theme-selector">
+            Theme
+            <div
+              onClick={ () => this.setTheme('tdark') }
+              className={ 'item black' + (this.state.theme === 'tdark' ? ' active' : '') }></div>
+            <div
+              onClick={ () => this.setTheme('tlight') }
+              className={ 'item light' + (this.state.theme === 'tlight' ? ' active' : '') }></div>
+          </div>
         </Footer>
       </div>
     );
@@ -137,8 +171,8 @@ class App extends React.Component {
                     <p>Make sure the firmware on your Trezor are up to date, then connect your Trezor and click the "Check Rewards" button. Please be aware that you'll need to allow popup windows for Trezor to work properly.</p>
                   }
                   <p>Also, make sure that your {this.state.vendor === 'ledger' ? 'Ledger' : 'Trezor'} is initialized prior using <strong>KMD Rewards Claim tool</strong>.</p>
-                  </div>
-                <img className="ledger-graphic" src={`${this.state.vendor}-logo.png`} alt={this.state.vendor === 'ledger' ? 'Ledger' : 'Trezor'} />
+                </div>
+                <img className="hw-graphic" src={`${this.state.vendor}-logo.png`} alt={this.state.vendor === 'ledger' ? 'Ledger' : 'Trezor'} />
               </React.Fragment>
             ) : (
               <Accounts {...this.state} />
@@ -149,11 +183,20 @@ class App extends React.Component {
 
           <Footer>
             <p>
-              <strong>{this.state.vendor === 'ledger' ? 'Ledger' : 'Trezor'} KMD Rewards Claim</strong> by <a target="_blank" rel="noopener noreferrer" href="https://github.com/atomiclabs">Atomic Labs</a> and <a target="_blank" rel="noopener noreferrer" href="https://github.com/komodoplatform">Komodo Platform</a>.
+              <strong>{this.state.vendor === 'ledger' ? 'Ledger' : 'Trezor'} KMD Rewards Claim</strong> by  and <a target="_blank" rel="noopener noreferrer" href="https://github.com/komodoplatform">Komodo Platform</a>.
               The <a target="_blank" rel="noopener noreferrer" href={`https://github.com/${repository}`}>source code</a> is licensed under <a target="_blank" rel="noopener noreferrer" href={`https://github.com/${repository}/blob/master/LICENSE`}>MIT</a>.
               <br />
               View the <a target="_blank" rel="noopener noreferrer" href={`https://github.com/${repository}#usage`}>README</a> for usage instructions.
             </p>
+            <div className="theme-selector">
+              Theme
+              <div
+                onClick={ () => this.setTheme('tdark') }
+                className={ 'item black' + (this.state.theme === 'tdark' ? ' active' : '') }></div>
+              <div
+                onClick={ () => this.setTheme('tlight') }
+                className={ 'item light' + (this.state.theme === 'tlight' ? ' active' : '') }></div>
+            </div>
           </Footer>
         </div>
       );
