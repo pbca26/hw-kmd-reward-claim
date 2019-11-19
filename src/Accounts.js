@@ -103,7 +103,7 @@ class Account extends React.Component {
             </button>
             {this.state.showXpub >=0 &&
              this.state.showXpub == accountIndex &&
-              <div style={{'padding': '20px','word-break': 'break-all'}}>
+              <div style={{'padding': '20px','wordBreak': 'break-all'}}>
                 <strong>Xpub:</strong> {xpub}
               </div>
             }

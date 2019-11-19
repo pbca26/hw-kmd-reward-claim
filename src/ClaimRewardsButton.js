@@ -12,6 +12,8 @@ class ClaimRewardsButton extends React.Component {
   state = this.initialState;
 
   get initialState() {
+    this.setSkipBroadcast = this.setSkipBroadcast.bind(this);
+
     return {
       isClaimingRewards: false,
       error: false,
@@ -36,9 +38,26 @@ class ClaimRewardsButton extends React.Component {
           icon: 'fas fa-broadcast-tower',
           description: <div>Broadcasting the reward claim transaction to the network.</div>,
           state: null
-        }
-      }
+        },
+      },
+      skipBroadcast: false,
+      skipBroadcastClicked: false,
     };
+  }
+
+  setSkipBroadcast() {
+    if (!this.state.skipBroadcastClicked) {
+      this.setState({
+        skipBroadcast: !this.state.skipBroadcast,
+        skipBroadcastClicked: true,
+      });
+
+      setTimeout(() => {
+        this.setState({
+          skipBroadcastClicked: false,
+        });
+      }, 50);
+    }
   }
 
   resetState = () => this.setState(this.initialState);
@@ -74,6 +93,7 @@ class ClaimRewardsButton extends React.Component {
     this.setState(prevState => ({
       ...this.initialState,
       isClaimingRewards: true,
+      skipBroadcast: false,
     }));
 
     let currentAction;
@@ -105,19 +125,25 @@ class ClaimRewardsButton extends React.Component {
         throw new Error((this.props.vendor === 'ledger' ? 'Ledger' : 'Trezor') + ' failed to generate a valid transaction');
       }
       updateActionState(this, currentAction, true);
+      
+      if (this.state.skipBroadcast) {
+        this.setState({
+          success: <React.Fragment><span style={{'padding': '10px 0', 'display': 'block'}}>Raw transaction:</span> <span style={{'wordBreak': 'break-all', 'display': 'block'}}>{rewardClaimTransaction}</span></React.Fragment>
+        });
+      } else {
+        currentAction = 'broadcastTransaction';
+        updateActionState(this, currentAction, 'loading');
+        const {txid} = await blockchain.broadcast(rewardClaimTransaction);
+        if(!txid || txid.length !== 64) {
+          throw new Error('Unable to broadcast transaction');
+        }
+        updateActionState(this, currentAction, true);
 
-      currentAction = 'broadcastTransaction';
-      updateActionState(this, currentAction, 'loading');
-      const {txid} = await blockchain.broadcast(rewardClaimTransaction);
-      if(!txid || txid.length !== 64) {
-        throw new Error('Unable to broadcast transaction');
+        this.props.handleRewardClaim(txid);
+        this.setState({
+          success: <React.Fragment>Claim TXID: <TxidLink txid={txid}/></React.Fragment>
+        });
       }
-      updateActionState(this, currentAction, true);
-
-      this.props.handleRewardClaim(txid);
-      this.setState({
-        success: <React.Fragment>Claim TXID: <TxidLink txid={txid}/></React.Fragment>
-      });
     } catch (error) {
       updateActionState(this, currentAction, false);
       this.setState({error: error.message});
@@ -147,6 +173,11 @@ class ClaimRewardsButton extends React.Component {
               </React.Fragment>
             ) : null}
           </p>
+          <label className="switch" onClick={this.setSkipBroadcast}>
+            <input type="checkbox" name="skipBroadcast" value={this.state.skipBroadcast} checked={this.state.skipBroadcast} readOnly />
+            <span className="slider round"></span>
+            <span className="slider-text">Don't broadcast transaction</span>
+          </label>
         </ActionListModal>
       </React.Fragment>
     );
