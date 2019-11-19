@@ -13,16 +13,24 @@ class Account extends React.Component {
   get initialState() {
     return {
       isClaimed: false,
-      claimTxid: null
+      claimTxid: null,
+      showXpub: null,
     };
   }
 
   handleRewardClaim = txid => {
     this.setState({
       isClaimed: true,
-      claimTxid: txid
+      claimTxid: txid,
+      showXpub: null,
     });
   };
+
+  showXpub(index) {
+    this.setState({
+      showXpub: index === this.state.showXpub ? null : index,
+    });
+  }
 
   render() {
     const {account, tiptime} = this.props;
@@ -32,7 +40,8 @@ class Account extends React.Component {
       balance,
       rewards,
       claimableAmount,
-      serviceFee
+      serviceFee,
+      xpub,
     } = account;
 
     const isClaimableAmount = (claimableAmount > 0);
@@ -89,6 +98,15 @@ class Account extends React.Component {
                 Claim TXID: <TxidLink txid={claimTxid}/>
               </div>
             )}
+            <button className="button is-primary" onClick={() => this.showXpub(accountIndex)}>
+              {this.state.showXpub >=0 && this.state.showXpub == accountIndex ? 'Hide Xpub' : 'Show Xpub'}
+            </button>
+            {this.state.showXpub >=0 &&
+             this.state.showXpub == accountIndex &&
+              <div style={{'padding': '20px','word-break': 'break-all'}}>
+                <strong>Xpub:</strong> {xpub}
+              </div>
+            }
             <ClaimRewardsButton account={account} handleRewardClaim={this.handleRewardClaim} isClaimed={this.state.isClaimed} vendor={this.props.vendor}>
               Claim Rewards
             </ClaimRewardsButton>

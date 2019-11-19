@@ -26,14 +26,6 @@ class App extends React.Component {
   }
 
   componentWillMount() {
-    TrezorConnect.on(DEVICE_EVENT, (event) => {
-      if (event.type === DEVICE.CONNECT) {
-        console.warn('trezor device connected', event);
-      } else if (event.type === DEVICE.DISCONNECT) {
-        console.warn('trezor device disconnected', event);
-      }
-    });
-
     TrezorConnect.manifest({
       email: 'developer@xyz.com',
       appUrl: 'http://your.application.com',

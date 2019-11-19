@@ -51,7 +51,7 @@ const getAccountAddresses = async account => {
       ...address,
       account,
       isChange,
-      derivationPath: `${derivationPath}/${isChange ? 1 : 0}/${address.addressIndex}`
+      derivationPath: `${derivationPath}/${isChange ? 1 : 0}/${address.addressIndex}`,
     });
   };
 
@@ -63,7 +63,8 @@ const getAccountAddresses = async account => {
   return {
     externalNode,
     internalNode,
-    addresses
+    addresses,
+    xpub,
   };
 };
 
