@@ -1,7 +1,10 @@
 .tdark {
   background-color: #1A2939;
   color: #fff;
-
+  
+  strong {
+    color: #fff;
+  }
   .content {
     h2,
     h3,
@@ -61,7 +64,11 @@
       }
       .panel-block {
         border-color: rgba(255, 255, 255, 0.5);
-
+        
+        > div,
+        i {
+          color: #fff;
+        }
         &.is-active {
           border: solid 1px #fff;
         }
@@ -70,6 +77,11 @@
   }
 
   .Accounts {
+    .Account {
+      > div {
+        color: #fff;
+      }
+    }
     .box {
       background: #233548;
       border-radius: 4px;
@@ -92,9 +104,6 @@
         }
         h4 {
           padding-top: 10px;
-        }
-        strong {
-          color: #fff;
         }
       }
       .table {
