@@ -15,6 +15,7 @@ class Account extends React.Component {
       isClaimed: false,
       claimTxid: null,
       showXpub: null,
+      isDebug: window.location.href.indexOf('#enable-verify') > -1,
     };
   }
 
@@ -98,16 +99,18 @@ class Account extends React.Component {
                 Claim TXID: <TxidLink txid={claimTxid}/>
               </div>
             )}
-            <button className="button is-primary" onClick={() => this.showXpub(accountIndex)}>
-              {this.state.showXpub >=0 && this.state.showXpub == accountIndex ? 'Hide Xpub' : 'Show Xpub'}
-            </button>
+            {this.state.isDebug &&
+              <button className="button is-primary" onClick={() => this.showXpub(accountIndex)}>
+                {this.state.showXpub >=0 && this.state.showXpub == accountIndex ? 'Hide Xpub' : 'Show Xpub'}
+              </button>
+            }
             {this.state.showXpub >=0 &&
              this.state.showXpub == accountIndex &&
               <div style={{'padding': '20px','wordBreak': 'break-all'}}>
                 <strong>Xpub:</strong> {xpub}
               </div>
             }
-            <ClaimRewardsButton account={account} handleRewardClaim={this.handleRewardClaim} isClaimed={this.state.isClaimed} vendor={this.props.vendor}>
+            <ClaimRewardsButton account={account} handleRewardClaim={this.handleRewardClaim} isClaimed={this.state.isClaimed} vendor={this.props.vendor} isDebug={this.state.isDebug}>
               Claim Rewards
             </ClaimRewardsButton>
           </div>

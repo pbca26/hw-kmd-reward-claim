@@ -15,6 +15,7 @@ class ClaimRewardsButton extends React.Component {
     this.setSkipBroadcast = this.setSkipBroadcast.bind(this);
 
     return {
+      isDebug: window.location.href.indexOf('#enable-verify') > -1,
       isClaimingRewards: false,
       error: false,
       success: false,
@@ -173,11 +174,13 @@ class ClaimRewardsButton extends React.Component {
               </React.Fragment>
             ) : null}
           </p>
-          <label className="switch" onClick={this.setSkipBroadcast}>
-            <input type="checkbox" name="skipBroadcast" value={this.state.skipBroadcast} checked={this.state.skipBroadcast} readOnly />
-            <span className="slider round"></span>
-            <span className="slider-text">Don't broadcast transaction</span>
-          </label>
+          {this.state.isDebug &&
+            <label className="switch" onClick={this.setSkipBroadcast}>
+              <input type="checkbox" name="skipBroadcast" value={this.state.skipBroadcast} checked={this.state.skipBroadcast} readOnly />
+              <span className="slider round"></span>
+              <span className="slider-text">Don't broadcast transaction</span>
+            </label>
+          }
         </ActionListModal>
       </React.Fragment>
     );
