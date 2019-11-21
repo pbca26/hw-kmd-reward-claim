@@ -14,9 +14,17 @@ class Account extends React.Component {
     return {
       isClaimed: false,
       claimTxid: null,
+      address: '',
+      // debug options
       showXpub: null,
       isDebug: window.location.href.indexOf('#enable-verify') > -1,
     };
+  }
+
+  updateInput(e) {
+    this.setState({
+      [e.target.name]: e.target.value,
+    });
   }
 
   handleRewardClaim = txid => {
@@ -94,6 +102,33 @@ class Account extends React.Component {
                 </table>
               </React.Fragment>
             )}
+            <div style={this.state.address ? {'padding': '10px 20px 20px 20px'} : {'padding': '10px 20px 30px 20px'}}>
+              Send rewards to
+              <select
+                style={{'marginLeft': '10px'}}
+                className="account-index-selector"
+                name="address"
+                value={this.state.address}
+                onChange={ (event) => this.updateInput(event) }>
+                <option
+                  key="rewards-output-address-default"
+                  value="">
+                  Unused address (default)
+                </option>
+                {account.addresses.map((item, index) => (
+                  <option
+                    key={`rewards-output-address-${index}`}
+                    value={item.address}>
+                    {item.address}
+                  </option>
+                ))}
+              </select>
+            </div>
+            {this.state.address &&
+              <div style={{'padding': '0 20px 30px 20px'}}>
+                <strong>Warning:</strong> sending rewards to a non-default address will break so called pseudo anonimity (one time address usage) and link your addresses together! This is not recommended option.
+              </div>
+            }
             {(isClaimed && claimTxid) && (
               <div className="is-pulled-right">
                 Claim TXID: <TxidLink txid={claimTxid}/>
@@ -106,11 +141,11 @@ class Account extends React.Component {
             }
             {this.state.showXpub >=0 &&
              this.state.showXpub == accountIndex &&
-              <div style={{'padding': '20px','wordBreak': 'break-all'}}>
+              <div style={{'padding': '20px', 'wordBreak': 'break-all'}}>
                 <strong>Xpub:</strong> {xpub}
               </div>
             }
-            <ClaimRewardsButton account={account} handleRewardClaim={this.handleRewardClaim} isClaimed={this.state.isClaimed} vendor={this.props.vendor} isDebug={this.state.isDebug}>
+            <ClaimRewardsButton account={account} handleRewardClaim={this.handleRewardClaim} isClaimed={this.state.isClaimed} vendor={this.props.vendor} address={this.state.address}>
               Claim Rewards
             </ClaimRewardsButton>
           </div>

@@ -52,12 +52,6 @@ class ClaimRewardsButton extends React.Component {
         skipBroadcast: !this.state.skipBroadcast,
         skipBroadcastClicked: true,
       });
-
-      setTimeout(() => {
-        this.setState({
-          skipBroadcastClicked: false,
-        });
-      }, 50);
     }
   }
 
@@ -65,7 +59,7 @@ class ClaimRewardsButton extends React.Component {
 
   getUnusedAddressIndex = () => this.props.account.addresses.filter(address => !address.isChange).length;
 
-  getUnusedAddress = () => getAddress(this.props.account.externalNode.derive(this.getUnusedAddressIndex()).publicKey);
+  getUnusedAddress = () => this.props.address.length ? this.props.address : getAddress(this.props.account.externalNode.derive(this.getUnusedAddressIndex()).publicKey);
 
   getOutputs = () => {
     const {
@@ -109,10 +103,11 @@ class ClaimRewardsButton extends React.Component {
 
       currentAction = 'confirmAddress';
       updateActionState(this, currentAction, 'loading');
+
       const unusedAddress = this.getUnusedAddress();
       const derivationPath = `44'/141'/${accountIndex}'/0/${this.getUnusedAddressIndex()}`;
       const verify = true;
-      const ledgerUnusedAddress = await ledger.getAddress(derivationPath, verify);
+      const ledgerUnusedAddress = this.props.address.length ? this.props.address : await ledger.getAddress(derivationPath, verify);
       if(ledgerUnusedAddress !== unusedAddress) {
         throw new Error((this.props.vendor === 'ledger' ? 'Ledger' : 'Trezor') + ` derived address "${ledgerUnusedAddress}" doesn't match browser derived address "${unusedAddress}"`);
       }
@@ -167,7 +162,7 @@ class ClaimRewardsButton extends React.Component {
           handleClose={this.resetState}
           show={isClaimingRewards}>
           <p>
-            You should receive a total of <strong>{humanReadableSatoshis(userOutput.value)} KMD</strong> to the new unused address: <strong>{userOutput.address}</strong><br />
+            You should receive a total of <strong>{humanReadableSatoshis(userOutput.value)} KMD</strong> to {!this.props.address.length && 'the new unused'}address: <strong>{userOutput.address}</strong><br />
             {feeOutput ? (
               <React.Fragment>
                 There will also be a {SERVICE_FEE_PERCENT}% service fee of <strong>{humanReadableSatoshis(feeOutput.value)} KMD</strong> to: <strong>{feeOutput.address}</strong>
