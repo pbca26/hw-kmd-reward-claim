@@ -102,28 +102,30 @@ class Account extends React.Component {
                 </table>
               </React.Fragment>
             )}
-            <div style={this.state.address ? {'padding': '10px 20px 20px 20px'} : {'padding': '10px 20px 30px 20px'}}>
-              Send rewards to
-              <select
-                style={{'marginLeft': '10px'}}
-                className="account-index-selector"
-                name="address"
-                value={this.state.address}
-                onChange={ (event) => this.updateInput(event) }>
-                <option
-                  key="rewards-output-address-default"
-                  value="">
-                  Unused address (default)
-                </option>
-                {account.addresses.map((item, index) => (
+            {account.addresses && account.addresses.length &&
+              <div style={this.state.address ? {'padding': '10px 20px 20px 20px'} : {'padding': '10px 20px 30px 20px'}}>
+                Send rewards to
+                <select
+                  style={{'marginLeft': '10px'}}
+                  className="account-index-selector"
+                  name="address"
+                  value={this.state.address}
+                  onChange={ (event) => this.updateInput(event) }>
                   <option
-                    key={`rewards-output-address-${index}`}
-                    value={item.address}>
-                    {item.address}
+                    key="rewards-output-address-default"
+                    value="">
+                    Unused address (default)
                   </option>
-                ))}
-              </select>
-            </div>
+                  {account.addresses.slice(0, 10).map((item, index) => (
+                    <option
+                      key={`rewards-output-address-${index}`}
+                      value={item.address}>
+                      {item.address}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            }
             {this.state.address &&
               <div style={{'padding': '0 20px 30px 20px'}}>
                 <strong>Warning:</strong> sending rewards to a non-default address will break so called pseudo anonimity (one time address usage) and link your addresses together! This is not recommended option.
