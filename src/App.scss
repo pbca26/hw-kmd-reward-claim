@@ -8,16 +8,43 @@
   min-height: 100vh;
   flex-direction: column;
   min-width: 600px;
-}
 
-.App .main {
-  flex: 1;
-  padding-top: 5.4em;
-}
+  .main {
+    flex: 1;
+    padding-top: 5.4em;
 
-.App .main .ledger-graphic {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0.5);
+    .hw-graphic {
+      height: 140px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.5);
+    }
+    
+    .vendor-ledger {
+      height: 60px;
+      margin-right: 100px;
+      cursor: pointer;
+    }
+    
+    .vendor-trezor {
+      height: 60px;
+      cursor: pointer;
+    }
+    
+    .vendor-selector h3 {
+      font-weight: bold;
+      font-size: 20px;
+      text-align: center;
+      padding: 40px 0;
+    }
+    
+    .vendor-selector-items {
+      text-align: center;
+    }
+    
+    .content {
+      padding: 0 20px;
+    }
+  }
 }

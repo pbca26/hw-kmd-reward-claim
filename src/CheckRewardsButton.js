@@ -11,13 +11,17 @@ class CheckRewardsButton extends React.Component {
   state = this.initialState;
 
   get initialState() {
+    if (this.props.vendor) {
+      ledger.setVendor(this.props.vendor);
+    }
+
     return {
       isCheckingRewards: false,
       error: false,
       actions: {
         connect: {
           icon: 'fab fa-usb',
-          description: <div>Connect and unlock your Ledger, then open the Komodo app on your device.</div>,
+          description: this.props.vendor === 'ledger' ? <div>Connect and unlock your Ledger, then open the Komodo app on your device.</div> : <div>Connect and unlock your Trezor.</div>,
           state: null
         },
         approve: {
@@ -57,7 +61,7 @@ class CheckRewardsButton extends React.Component {
       updateActionState(this, currentAction, 'loading');
       const ledgerIsAvailable = await ledger.isAvailable();
       if (!ledgerIsAvailable) {
-        throw new Error('Ledger device is unavailable!');
+        throw new Error((this.props.vendor === 'ledger' ? 'Ledger' : 'Trezor') + ' device is unavailable!');
       }
       updateActionState(this, currentAction, true);
 
@@ -90,7 +94,7 @@ class CheckRewardsButton extends React.Component {
     const {isCheckingRewards, actions, error} = this.state;
 
     return (
-      <>
+      <React.Fragment>
         <button className="button is-primary" onClick={this.scanAddresses}>
           {this.props.children}
         </button>
@@ -101,10 +105,10 @@ class CheckRewardsButton extends React.Component {
           handleClose={this.resetState}
           show={isCheckingRewards}>
           <p>
-            Exporting public keys from your Ledger device, scanning the blockchain for funds, and calculating any claimable rewards. Please approve any public key export requests on your device.
+            Exporting public keys from your {this.state.vendor === 'ledger' ? 'Ledger' : 'Trezor'} device, scanning the blockchain for funds, and calculating any claimable rewards. Please approve any public key export requests on your device.
           </p>
         </ActionListModal>
-      </>
+      </React.Fragment>
     );
   }
 

@@ -24,7 +24,7 @@ const Utxos = ({utxos, tiptime}) => {
           <tr key={utxo.id} className="utxo">
             <th>{utxo.address}</th>
             <td>{humanReadableSatoshis(utxo.satoshis)} KMD</td>
-            <td><Boolean value={utxo.locktime} /></td>
+            <td className="text-center"><Boolean value={utxo.locktime} /></td>
             <td>{humanReadableSatoshis(getKomodoRewards({tiptime, ...utxo}))} KMD</td>
             <td>{humanRewardEndDate(utxo)}</td>
           </tr>

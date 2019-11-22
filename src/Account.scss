@@ -4,36 +4,41 @@
   opacity: 0.5;
 }
 
-.Account h2 .balance {
-  font-weight: $weight-normal;
-  font-size: 0.8em;
-  color: $grey;
-  margin-top: 0.2em;
-}
+.Account {
+  h2 {
+    .balance {
+      font-weight: $weight-normal;
+      font-size: 0.8em;
+      color: $grey;
+      margin-top: 0.2em;
+    }
+    small {
+      font-weight: $weight-normal;
+      font-size: 0.6em;
+      color: inherit;
+    }
+  }
 
-.Account h2 small {
-  font-weight: $weight-normal;
-  font-size: 0.6em;
-  color: inherit;
-}
+  table.breakdown {
+    width: auto;
 
-.Account table.breakdown {
-  width: auto;
-}
+    td {
+      position: relative;
+      padding: 0 0 0 1em;
 
-.Account table.breakdown td {
-  position: relative;
-  padding: 0 0 0 1em;
-}
-
-.Account table.breakdown td:first-child:before {
-  content: '-';
-  position: absolute;
-  left: 0;
-}
-.Account table.breakdown tr:first-child td:first-child:before {
-  content: '';
-}
-.Account table.breakdown tr:last-child td:first-child:before {
-  content: '=';
+      &:first-child:before {
+        content: '-';
+        position: absolute;
+        left: 0;
+      }
+    }
+    tr {
+      &:first-child td:first-child:before {
+        content: '';
+      }
+      &:last-child td:first-child:before {
+        content: '=';
+      }
+    }
+  }
 }
