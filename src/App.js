@@ -12,6 +12,8 @@ import './App.scss';
 import TrezorConnect from 'trezor-connect';
 import ledger from './lib/ledger';
 import {getLocalStorageVar, setLocalStorageVar} from './localstorage-util';
+import {INSIGHT_API_URL} from './constants';
+import {setExplorerUrl} from './lib/blockchain';
 
 class App extends React.Component {
   state = this.initialState;
@@ -20,6 +22,7 @@ class App extends React.Component {
     return {
       accounts: [],
       tiptime: null,
+      explorerEndpoint: 'default',
       vendor: null,
       theme: getLocalStorageVar('settings') && getLocalStorageVar('settings').theme ? getLocalStorageVar('settings').theme : 'tdark',
     };
@@ -37,6 +40,14 @@ class App extends React.Component {
     } else {
       document.getElementById('body').className = getLocalStorageVar('settings').theme;
     }
+  }
+
+  updateExplorerEndpoint(e) {
+    this.setState({
+      [e.target.name]: e.target.value,
+    });
+
+    setExplorerUrl(e.target.value);
   }
 
   resetState = () => {
@@ -132,6 +143,27 @@ class App extends React.Component {
                 {this.state.vendor &&
                   <strong>{this.state.vendor === 'ledger' ? 'Ledger' : 'Trezor'} KMD Rewards Claim</strong>
                 }
+                <span className="explorer-selector-block">
+                  <i className="fa fa-cog"></i>
+                  <select
+                    className="explorer-selector"
+                    name="explorerEndpoint"
+                    value={this.state.explorerEndpoint}
+                    onChange={ (event) => this.updateExplorerEndpoint(event) }>
+                    <option
+                      key="explorer-selector-disabled"
+                      disabled>
+                      Select API endpoint
+                    </option>
+                    {Object.keys(INSIGHT_API_URL).map((val, index) => (
+                      <option
+                        key={`explorer-selector-${val}`}
+                        value={val}>
+                        {val}
+                      </option>
+                    ))}
+                  </select>
+                </span>
               </h1>
             </div>
             <div className="navbar-menu">
