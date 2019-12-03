@@ -88,9 +88,8 @@ class App extends React.Component {
 
         <section className="main">
           <React.Fragment>
-            <div className="container content">
+            <div className="container content text-center">
               <h2>Claim your KMD rewards on your hardware wallet device.</h2>
-              <h4>As a gift to the community, we have decided to make this service free! There is no longer a fee to claim rewards. ❤️</h4>
             </div>
             <div className="vendor-selector">
               <h3>Choose your vendor</h3>
@@ -187,7 +186,6 @@ class App extends React.Component {
               <React.Fragment>
                 <div className="container content">
                   <h2>Claim your KMD rewards on your {this.state.vendor === 'ledger' ? 'Ledger' : 'Trezor'} device.</h2>
-                  <h4>As a gift to the community, we have decided to make this service free! There is no longer a fee to claim rewards. ❤️</h4>
                   {this.state.vendor === 'ledger' &&
                     <p>Make sure the KMD app and firmware on your Ledger are up to date, then connect your Ledger, open the KMD app, and click the "Check Rewards" button.</p>
                   }

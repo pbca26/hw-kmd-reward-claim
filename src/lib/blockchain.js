@@ -1,6 +1,6 @@
 import {INSIGHT_API_URL} from '../constants';
 
-let explorerUrl = INSIGHT_API_URL.default;
+let explorerUrl = INSIGHT_API_URL.komodoplatform;
 
 export const setExplorerUrl = (name) => {
   explorerUrl = INSIGHT_API_URL[name];

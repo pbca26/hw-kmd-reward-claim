@@ -1,5 +1,3 @@
-export const SERVICE_FEE_ADDRESS = 'RQzv9tVzCHXN9j3kF5qNzms555zzLC9HQF';
-export const SERVICE_FEE_PERCENT = 0;
 export const TX_FEE = 20000;
 export const INSIGHT_API_URL = {
   default: 'https://insight.hyperdex.app/insight-api-komodo/',

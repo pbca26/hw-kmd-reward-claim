@@ -12,8 +12,8 @@ const setVendor = (name) => {
   vendor = name;
 };
 
-const getVendor = (name) => {
-  return getVendor;
+const getVendor = () => {
+  return vendor;
 };
 
 const getDevice = async () => {
@@ -91,7 +91,7 @@ const createTransaction = async function(utxos, outputs) {
     }));
     const associatedKeysets = utxos.map(utxo => utxo.derivationPath);
     const changePath = undefined;
-    const outputScript = buildOutputScript(outputs);
+    const outputScript = buildOutputScript([outputs]);
     const unixtime = Math.floor(Date.now() / 1000);
     const lockTime = (unixtime - 777);
     const sigHashType = undefined;
@@ -143,8 +143,8 @@ const createTransaction = async function(utxos, outputs) {
     }
 
     tx.outputs.push({
-      address: outputs[0].address,
-      amount: outputs[0].value.toString(),
+      address: outputs.address,
+      amount: outputs.value.toString(),
       script_type: 'PAYTOADDRESS',
     });
 
