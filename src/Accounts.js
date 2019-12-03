@@ -2,7 +2,7 @@ import React from 'react';
 import Utxos from './Utxos';
 import ClaimRewardsButton from './ClaimRewardsButton';
 import TxidLink from './TxidLink';
-import {SERVICE_FEE_PERCENT, TX_FEE} from './constants';
+import {TX_FEE} from './constants';
 import humanReadableSatoshis from './lib/human-readable-satoshis';
 import './Accounts.scss';
 import './Account.scss';
@@ -84,12 +84,6 @@ class Account extends React.Component {
                       <td>{humanReadableSatoshis(rewards)} KMD</td>
                       <td>Rewards accrued</td>
                     </tr>
-                    {(SERVICE_FEE_PERCENT !== 0 && serviceFee !== 0) && (
-                      <tr>
-                        <td>{humanReadableSatoshis(serviceFee)} KMD</td>
-                        <td>{SERVICE_FEE_PERCENT}% service fee</td>
-                      </tr>
-                    )}
                     <tr>
                       <td>{humanReadableSatoshis(TX_FEE)} KMD</td>
                       <td>Network transaction fee</td>
