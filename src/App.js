@@ -13,7 +13,7 @@ import TrezorConnect from 'trezor-connect';
 import ledger from './lib/ledger';
 import {getLocalStorageVar, setLocalStorageVar} from './localstorage-util';
 import {INSIGHT_API_URL} from './constants';
-import {setExplorerUrl} from './lib/blockchain';
+import {setExplorerUrl, getInfo} from './lib/blockchain';
 
 class App extends React.Component {
   state = this.initialState;
@@ -40,6 +40,8 @@ class App extends React.Component {
     } else {
       document.getElementById('body').className = getLocalStorageVar('settings').theme;
     }
+
+    this.checkExplorerEndpoints();
   }
 
   updateExplorerEndpoint(e) {
@@ -49,6 +51,29 @@ class App extends React.Component {
 
     setExplorerUrl(e.target.value);
   }
+
+  checkExplorerEndpoints = async () => {
+    const getInfoRes = await Promise.all([
+      getInfo(INSIGHT_API_URL.default),
+      getInfo(INSIGHT_API_URL.komodoplatform),
+      getInfo(INSIGHT_API_URL.dexstats)
+    ]);
+
+    console.warn('checkExplorerEndpoints', getInfoRes);
+    
+    for (let i = 0; i < 3; i++) {
+      if (getInfoRes[i] && getInfoRes[i].hasOwnProperty('info') && getInfoRes[i].info.hasOwnProperty('version')) {
+        console.warn('set api endpoint to ' + Object.keys(INSIGHT_API_URL)[i]);
+        setExplorerUrl(Object.keys(INSIGHT_API_URL)[i]);
+        
+        this.setState({
+          explorerEndpoint: Object.keys(INSIGHT_API_URL)[i],
+        });
+
+        break;
+      }
+    }
+  };
 
   resetState = () => {
     ledger.setVendor();
