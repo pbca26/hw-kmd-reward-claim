@@ -1,9 +1,9 @@
 import TransportU2F from '@ledgerhq/hw-transport-u2f';
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
 import Btc from '@ledgerhq/hw-app-btc';
-import buildOutputScript from 'build-output-script';
+import buildOutputScript from './build-output-script';
 import bip32Path from 'bip32-path';
-import createXpub from 'create-xpub';
+import createXpub from './create-xpub';
 import TrezorConnect from 'trezor-connect';
 
 let vendor;
