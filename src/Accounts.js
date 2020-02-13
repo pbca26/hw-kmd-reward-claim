@@ -49,7 +49,6 @@ class Account extends React.Component {
       balance,
       rewards,
       claimableAmount,
-      serviceFee,
       xpub,
     } = account;
 
