@@ -42,7 +42,7 @@ class Account extends React.Component {
   }
 
   render() {
-    const {account, tiptime} = this.props;
+    const {account, tiptime, vendor} = this.props;
     const {
       accountIndex,
       utxos,
@@ -140,7 +140,7 @@ class Account extends React.Component {
                 <strong>Xpub:</strong> {xpub}
               </div>
             }
-            <ClaimRewardsButton account={account} handleRewardClaim={this.handleRewardClaim} isClaimed={this.state.isClaimed} vendor={this.props.vendor} address={this.state.address}>
+            <ClaimRewardsButton account={account} handleRewardClaim={this.handleRewardClaim} isClaimed={this.state.isClaimed} vendor={vendor} address={this.state.address}>
               Claim Rewards
             </ClaimRewardsButton>
           </div>
@@ -150,7 +150,7 @@ class Account extends React.Component {
   }
 }
 
-const Accounts = ({accounts, tiptime}) => (
+const Accounts = ({accounts, tiptime, vendor}) => (
   <div className="Accounts">
     <div className="container">
       <div className="columns is-multiline">
@@ -159,6 +159,7 @@ const Accounts = ({accounts, tiptime}) => (
             key={account.accountIndex}
             account={account}
             tiptime={tiptime}
+            vendor={vendor}
             />
         ))}
       </div>
