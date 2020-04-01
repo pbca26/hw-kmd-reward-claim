@@ -46,9 +46,26 @@ const getTipTime = async () => {
   const block = await getBlock(bestblockhash);
 
   return block.time;
-}
+};
 
 const broadcast = transaction => get('tx/send', {rawtx: transaction});
+
+export const getInfo = async (explorerUrl) => {
+  try {
+    const response = await fetch(`${explorerUrl}/status?q=getInfo`);
+    const isJson = response.headers.get('Content-Type').includes('application/json');
+
+    const body = isJson ? await response.json() : await response.text();
+
+    if (!response.ok) {
+      throw new Error(body);
+    }
+
+    return body;
+  } catch (e) {
+    return null;
+  }
+};
 
 const blockchain = {
   get,
@@ -59,7 +76,7 @@ const blockchain = {
   getBestBlockHash,
   getBlock,
   getTipTime,
-  broadcast
+  broadcast,
 };
 
 export default blockchain;
