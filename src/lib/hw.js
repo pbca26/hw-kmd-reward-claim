@@ -218,7 +218,7 @@ const getXpub = async derivationPath => {
   }
 };
 
-const ledger = {
+const hw = {
   getDevice,
   isAvailable,
   getAddress,
@@ -228,4 +228,4 @@ const ledger = {
   getVendor
 };
 
-export default ledger;
+export default hw;
