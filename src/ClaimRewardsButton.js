@@ -1,7 +1,7 @@
 import React from 'react';
 import ActionListModal from './ActionListModal';
 import TxidLink from './TxidLink';
-import ledger from './lib/ledger';
+import hw from './lib/hw';
 import blockchain from './lib/blockchain';
 import getAddress from './lib/get-address';
 import updateActionState from './lib/update-action-state';
@@ -87,8 +87,8 @@ class ClaimRewardsButton extends React.Component {
     try {
       currentAction = 'connect';
       updateActionState(this, currentAction, 'loading');
-      const ledgerIsAvailable = await ledger.isAvailable();
-      if (!ledgerIsAvailable) {
+      const hwIsAvailable = await hw.isAvailable();
+      if (!hwIsAvailable) {
         throw new Error((this.props.vendor === 'ledger' ? 'Ledger' : 'Trezor') + ' device is unavailable!');
       }
       updateActionState(this, currentAction, true);
@@ -99,16 +99,16 @@ class ClaimRewardsButton extends React.Component {
       const unusedAddress = this.getUnusedAddress();
       const derivationPath = `44'/141'/${accountIndex}'/0/${this.getUnusedAddressIndex()}`;
       const verify = true;
-      const ledgerUnusedAddress = this.props.address.length ? this.props.address : await ledger.getAddress(derivationPath, verify);
-      if (ledgerUnusedAddress !== unusedAddress) {
-        throw new Error((this.props.vendor === 'ledger' ? 'Ledger' : 'Trezor') + ` derived address "${ledgerUnusedAddress}" doesn't match browser derived address "${unusedAddress}"`);
+      const hwUnusedAddress = this.props.address.length ? this.props.address : await hw.getAddress(derivationPath, verify);
+      if (hwUnusedAddress !== unusedAddress) {
+        throw new Error((this.props.vendor === 'ledger' ? 'Ledger' : 'Trezor') + ` derived address "${hwUnusedAddress}" doesn't match browser derived address "${unusedAddress}"`);
       }
       updateActionState(this, currentAction, true);
 
       currentAction = 'approveTransaction';
       updateActionState(this, currentAction, 'loading');
       const outputs = this.getOutputs();
-      const rewardClaimTransaction = await ledger.createTransaction(utxos, outputs);
+      const rewardClaimTransaction = await hw.createTransaction(utxos, outputs);
       if (!rewardClaimTransaction) {
         throw new Error((this.props.vendor === 'ledger' ? 'Ledger' : 'Trezor') + ' failed to generate a valid transaction');
       }

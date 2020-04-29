@@ -10,7 +10,7 @@ import Footer from './Footer';
 import {repository} from '../package.json';
 import './App.scss';
 import TrezorConnect from 'trezor-connect';
-import ledger from './lib/ledger';
+import hw from './lib/hw';
 import {getLocalStorageVar, setLocalStorageVar} from './localstorage-util';
 import {INSIGHT_API_URL} from './constants';
 import {setExplorerUrl, getInfo} from './lib/blockchain';
@@ -76,7 +76,7 @@ class App extends React.Component {
   };
 
   resetState = () => {
-    ledger.setVendor();
+    hw.setVendor();
     this.setVendor();
     this.setState(this.initialState);
   }
