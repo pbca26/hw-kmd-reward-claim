@@ -7,6 +7,16 @@ import createXpub from './create-xpub';
 import TrezorConnect from 'trezor-connect';
 
 let vendor;
+let ledgerFWVersion = 'default';
+
+const setLedgerFWVersion = (name) => {
+  ledgerFWVersion = name;
+  console.warn(ledgerFWVersion);
+};
+
+const getLedgerFWVersion = () => {
+  return ledgerFWVersion;
+};
 
 const setVendor = (name) => {
   vendor = name;
@@ -225,7 +235,9 @@ const hw = {
   createTransaction,
   getXpub,
   setVendor,
-  getVendor
+  getVendor,
+  setLedgerFWVersion,
+  getLedgerFWVersion
 };
 
 export default hw;
