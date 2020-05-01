@@ -53,15 +53,13 @@ class App extends React.Component {
   }
 
   checkExplorerEndpoints = async () => {
-    const getInfoRes = await Promise.all([
-      getInfo(INSIGHT_API_URL.default),
-      getInfo(INSIGHT_API_URL.komodoplatform),
-      getInfo(INSIGHT_API_URL.dexstats)
-    ]);
+    const getInfoRes =  await Promise.all(Object.keys(INSIGHT_API_URL).map((value, index) => {
+      return getInfo(INSIGHT_API_URL[value]);
+    }));
 
     console.warn('checkExplorerEndpoints', getInfoRes);
     
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < Object.keys(INSIGHT_API_URL).length; i++) {
       if (getInfoRes[i] && getInfoRes[i].hasOwnProperty('info') && getInfoRes[i].info.hasOwnProperty('version')) {
         console.warn('set api endpoint to ' + Object.keys(INSIGHT_API_URL)[i]);
         setExplorerUrl(Object.keys(INSIGHT_API_URL)[i]);
