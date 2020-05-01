@@ -14,3 +14,7 @@ export const KOMODO = {
   scriptHash: 0x55,
   wif: 0xBC
 };
+export const LEDGER_FW_VERSIONS = {
+  default: 'Nano S firmware v1.5',
+  webusb: 'Nano S firmware v1.6', // nano s fw > 1.6 
+};
