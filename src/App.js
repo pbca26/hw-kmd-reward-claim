@@ -50,6 +50,8 @@ class App extends React.Component {
     this.setState({
       'ledgerDeviceType': type,
     });
+
+    if (type === 'x') hw.setLedgerFWVersion('webusb');
   }
 
   updateLedgerFWVersion(e) {
