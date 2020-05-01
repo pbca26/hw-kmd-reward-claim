@@ -1,8 +1,7 @@
 export const TX_FEE = 20000;
 export const INSIGHT_API_URL = {
-  default: 'https://insight.hyperdex.app/insight-api-komodo/',
+  default: 'https://kmd.explorer.dexstats.info/insight-api-komodo/',
   komodoplatform: 'https://explorer.komodoplatform.com:10000/kmd/api/',
-  dexstats: 'https://kmd.explorer.dexstats.info/insight-api-komodo/',
 };
 export const INSIGHT_EXPLORER_URL = 'https://kmdexplorer.io/';
 export const KOMODO = {
