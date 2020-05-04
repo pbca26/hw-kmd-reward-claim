@@ -94,7 +94,9 @@ class CheckRewardsButton extends React.Component {
 
     return (
       <React.Fragment>
-        <button className="button is-primary" onClick={this.scanAddresses}>
+        <button
+          className="button is-primary"
+          onClick={this.scanAddresses}>
           {this.props.children}
         </button>
         <ActionListModal
@@ -104,7 +106,7 @@ class CheckRewardsButton extends React.Component {
           handleClose={this.resetState}
           show={isCheckingRewards}>
           <p>
-            Exporting public keys from your {this.props.vendor === 'ledger' ? 'Ledger' : 'Trezor'} device, scanning the blockchain for funds, and calculating any claimable rewards. Please approve any public key export requests on your device.
+            Exporting public keys from your <span className="ucfirst">{this.state.vendor}</span> device, scanning the blockchain for funds, and calculating any claimable rewards. Please approve any public key export requests on your device.
           </p>
         </ActionListModal>
       </React.Fragment>

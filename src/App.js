@@ -37,7 +37,7 @@ class App extends React.Component {
     });
 
     if (!getLocalStorageVar('settings')) {
-      setLocalStorageVar('settings', { theme: 'tdark' });
+      setLocalStorageVar('settings', {theme: 'tdark'});
       document.getElementById('body').className = 'tdark';
     } else {
       document.getElementById('body').className = getLocalStorageVar('settings').theme;
@@ -78,7 +78,9 @@ class App extends React.Component {
     console.warn('checkExplorerEndpoints', getInfoRes);
     
     for (let i = 0; i < Object.keys(INSIGHT_API_URL).length; i++) {
-      if (getInfoRes[i] && getInfoRes[i].hasOwnProperty('info') && getInfoRes[i].info.hasOwnProperty('version')) {
+      if (getInfoRes[i] &&
+          getInfoRes[i].hasOwnProperty('info') &&
+          getInfoRes[i].info.hasOwnProperty('version')) {
         console.warn('set api endpoint to ' + Object.keys(INSIGHT_API_URL)[i]);
         setExplorerUrl(Object.keys(INSIGHT_API_URL)[i]);
         
@@ -107,7 +109,7 @@ class App extends React.Component {
 
   setTheme(name) {
     document.getElementById('body').className = name;
-    setLocalStorageVar('settings', { theme: name });
+    setLocalStorageVar('settings', {theme: name});
     this.setState({
       theme: name,
     });
@@ -119,7 +121,10 @@ class App extends React.Component {
         <Header>
           <div className="navbar-brand">
             <div className="navbar-item">
-              <img src="favicon.png" className="KmdIcon" alt="Komodo logo" />
+              <img
+                src="favicon.png"
+                className="KmdIcon"
+                alt="Komodo logo" />
             </div>
             <h1 className="navbar-item">
               <strong>HW KMD Rewards Claim</strong>
@@ -135,8 +140,16 @@ class App extends React.Component {
             <div className="vendor-selector">
               <h3>Choose your vendor</h3>
               <div className="vendor-selector-items">
-                <img className="vendor-ledger" src="ledger-logo.png" alt="Ledger" onClick={() => this.setVendor('ledger')} />
-                <img className="vendor-trezor" src="trezor-logo.png" alt="Trezor" onClick={() => this.setVendor('trezor')} />
+                <img
+                  className="vendor-ledger"
+                  src="ledger-logo.png"
+                  alt="Ledger"
+                  onClick={() => this.setVendor('ledger')} />
+                <img
+                  className="vendor-trezor"
+                  src="trezor-logo.png"
+                  alt="Trezor"
+                  onClick={() => this.setVendor('trezor')} />
               </div>
             </div>
           </React.Fragment>
@@ -154,11 +167,11 @@ class App extends React.Component {
           <div className="theme-selector">
             Theme
             <div
-              onClick={ () => this.setTheme('tdark') }
-              className={ 'item black' + (this.state.theme === 'tdark' ? ' active' : '') }></div>
+              onClick={() => this.setTheme('tdark')}
+              className={'item black' + (this.state.theme === 'tdark' ? ' active' : '')}></div>
             <div
-              onClick={ () => this.setTheme('tlight') }
-              className={ 'item light' + (this.state.theme === 'tlight' ? ' active' : '') }></div>
+              onClick={() => this.setTheme('tlight')}
+              className={'item light' + (this.state.theme === 'tlight' ? ' active' : '')}></div>
           </div>
         </Footer>
       </div>
@@ -174,14 +187,19 @@ class App extends React.Component {
           <Header vendor={this.state.vendor}>
             <div className="navbar-brand">
               <div className="navbar-item">
-                <img src="favicon.png" className="KmdIcon" alt="Komodo logo" />
+                <img
+                  src="favicon.png"
+                  className="KmdIcon"
+                  alt="Komodo logo" />
               </div>
               <h1 className="navbar-item">
                 {!this.state.vendor &&
                   <strong>HW KMD Rewards Claim</strong>
                 }
                 {this.state.vendor &&
-                  <strong>{this.state.vendor === 'ledger' ? 'Ledger' : 'Trezor'} KMD Rewards Claim</strong>
+                  <strong>
+                    <span className="ucfirst">{this.state.vendor}</span> KMD Rewards Claim
+                  </strong>
                 }
                 <span className="explorer-selector-block">
                   <i className="fa fa-cog"></i>
@@ -211,11 +229,16 @@ class App extends React.Component {
                 <div className="navbar-item">
                   <div className="buttons">
                     {(this.state.vendor === 'trezor' || (this.state.vendor === 'ledger' && this.state.ledgerDeviceType)) &&
-                      <CheckRewardsButton handleRewardData={this.handleRewardData} vendor={this.state.vendor}>
+                      <CheckRewardsButton
+                        handleRewardData={this.handleRewardData}
+                        vendor={this.state.vendor}>
                         <strong>Check Rewards</strong>
                       </CheckRewardsButton>
                     }
-                    <button className="button is-light" disabled={isEqual(this.state, this.initialState)} onClick={this.resetState}>
+                    <button
+                      className="button is-light"
+                      disabled={isEqual(this.state, this.initialState)}
+                      onClick={this.resetState}>
                       Reset
                     </button>
                   </div>
@@ -228,23 +251,33 @@ class App extends React.Component {
             {this.state.accounts.length === 0 ? (
               <React.Fragment>
                 <div className="container content">
-                  <h2>Claim your KMD rewards on your {this.state.vendor === 'ledger' ? 'Ledger' : 'Trezor'} device.</h2>
+                  <h2>Claim your KMD rewards on your <span className="ucfirst">{this.state.vendor}</span> device.</h2>
                   {this.state.vendor === 'ledger' &&
                     <p>Make sure the KMD app and firmware on your Ledger are up to date, then connect your Ledger, open the KMD app, and click the "Check Rewards" button.</p>
                   }
                   {this.state.vendor === 'trezor' &&
                     <p>Make sure the firmware on your Trezor are up to date, then connect your Trezor and click the "Check Rewards" button. Please be aware that you'll need to allow popup windows for Trezor to work properly.</p>
                   }
-                  <p>Also, make sure that your {this.state.vendor === 'ledger' ? 'Ledger' : 'Trezor'} is initialized prior using <strong>KMD Rewards Claim tool</strong>.</p>
+                  <p>Also, make sure that your <span className="ucfirst">{this.state.vendor}</span> is initialized prior using <strong>KMD Rewards Claim tool</strong>.</p>
                 </div>
-                <img className="hw-graphic" src={`${this.state.vendor}-logo.png`} alt={this.state.vendor === 'ledger' ? 'Ledger' : 'Trezor'} />
-                {this.state.vendor === 'ledger' && (!this.state.ledgerDeviceType || this.state.ledgerDeviceType === 's') &&
+                <img
+                  className="hw-graphic"
+                  src={`${this.state.vendor}-logo.png`}
+                  alt={this.state.vendor === 'ledger' ? 'Ledger' : 'Trezor'} />
+                {this.state.vendor === 'ledger' &&
+                 (!this.state.ledgerDeviceType || this.state.ledgerDeviceType === 's') &&
                   <div className="ledger-device-selector">
                     <div className="ledger-device-selector-buttons">
-                      <button className="button is-light" disabled={this.state.ledgerDeviceType} onClick={() => this.updateLedgerDeviceType('s')}>
+                      <button
+                        className="button is-light"
+                        disabled={this.state.ledgerDeviceType}
+                        onClick={() => this.updateLedgerDeviceType('s')}>
                         Nano S
                       </button>
-                      <button className="button is-light" disabled={this.state.ledgerDeviceType} onClick={() => this.updateLedgerDeviceType('x')}>
+                      <button
+                        className="button is-light"
+                        disabled={this.state.ledgerDeviceType}
+                        onClick={() => this.updateLedgerDeviceType('x')}>
                         Nano X
                       </button>
                     </div>
@@ -255,7 +288,7 @@ class App extends React.Component {
                           className="ledger-fw-selector"
                           name="ledgerFWVersion"
                           value={this.state.ledgerFWVersion}
-                          onChange={ (event) => this.updateLedgerFWVersion(event) }>
+                          onChange={(event) => this.updateLedgerFWVersion(event)}>
                           {Object.keys(LEDGER_FW_VERSIONS).map((val, index) => (
                             <option
                               key={`ledger-fw-selector-${val}`}
@@ -278,7 +311,7 @@ class App extends React.Component {
 
           <Footer>
             <p>
-              <strong>{this.state.vendor === 'ledger' ? 'Ledger' : 'Trezor'} KMD Rewards Claim</strong> by  and <a target="_blank" rel="noopener noreferrer" href="https://github.com/komodoplatform">Komodo Platform</a>.
+              <strong><span className="ucfirst">{this.state.vendor}</span> KMD Rewards Claim</strong> by  and <a target="_blank" rel="noopener noreferrer" href="https://github.com/komodoplatform">Komodo Platform</a>.
               The <a target="_blank" rel="noopener noreferrer" href={`https://github.com/${repository}`}>source code</a> is licensed under <a target="_blank" rel="noopener noreferrer" href={`https://github.com/${repository}/blob/master/LICENSE`}>MIT</a>.
               <br />
               View the <a target="_blank" rel="noopener noreferrer" href={`https://github.com/${repository}#usage`}>README</a> for usage instructions.
@@ -286,11 +319,11 @@ class App extends React.Component {
             <div className="theme-selector">
               Theme
               <div
-                onClick={ () => this.setTheme('tdark') }
-                className={ 'item black' + (this.state.theme === 'tdark' ? ' active' : '') }></div>
+                onClick={() => this.setTheme('tdark')}
+                className={'item black' + (this.state.theme === 'tdark' ? ' active' : '')}></div>
               <div
-                onClick={ () => this.setTheme('tlight') }
-                className={ 'item light' + (this.state.theme === 'tlight' ? ' active' : '') }></div>
+                onClick={() => this.setTheme('tlight')}
+                className={'item light' + (this.state.theme === 'tlight' ? ' active' : '')}></div>
             </div>
           </Footer>
         </div>
