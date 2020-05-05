@@ -1,4 +1,4 @@
-import ledger from './ledger';
+import hw from './hw';
 import blockchain from './blockchain';
 import getAddress from './get-address';
 import bitcoin from 'bitcoinjs-lib';
@@ -38,7 +38,7 @@ const walkDerivationPath = async node => {
 
 const getAccountAddresses = async account => {
   const derivationPath = `44'/141'/${account}'`;
-  const xpub = pubKeysCache[derivationPath] || await ledger.getXpub(derivationPath);
+  const xpub = pubKeysCache[derivationPath] || await hw.getXpub(derivationPath);
   const node = bitcoin.bip32.fromBase58(xpub);
   const externalNode = node.derive(0);
   const internalNode = node.derive(1);

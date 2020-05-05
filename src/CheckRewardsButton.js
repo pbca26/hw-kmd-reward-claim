@@ -1,6 +1,6 @@
 import React from 'react';
 import getKomodoRewards from './lib/get-komodo-rewards';
-import ledger from './lib/ledger';
+import hw from './lib/hw';
 import accountDiscovery from './lib/account-discovery';
 import blockchain from './lib/blockchain';
 import updateActionState from './lib/update-action-state';
@@ -12,7 +12,7 @@ class CheckRewardsButton extends React.Component {
 
   get initialState() {
     if (this.props.vendor) {
-      ledger.setVendor(this.props.vendor);
+      hw.setVendor(this.props.vendor);
     }
 
     return {
@@ -58,8 +58,8 @@ class CheckRewardsButton extends React.Component {
     try {
       currentAction = 'connect';
       updateActionState(this, currentAction, 'loading');
-      const ledgerIsAvailable = await ledger.isAvailable();
-      if (!ledgerIsAvailable) {
+      const hwIsAvailable = await hw.isAvailable();
+      if (!hwIsAvailable) {
         throw new Error((this.props.vendor === 'ledger' ? 'Ledger' : 'Trezor') + ' device is unavailable!');
       }
       updateActionState(this, currentAction, true);
@@ -94,7 +94,9 @@ class CheckRewardsButton extends React.Component {
 
     return (
       <React.Fragment>
-        <button className="button is-primary" onClick={this.scanAddresses}>
+        <button
+          className="button is-primary"
+          onClick={this.scanAddresses}>
           {this.props.children}
         </button>
         <ActionListModal
@@ -104,7 +106,7 @@ class CheckRewardsButton extends React.Component {
           handleClose={this.resetState}
           show={isCheckingRewards}>
           <p>
-            Exporting public keys from your {this.props.vendor === 'ledger' ? 'Ledger' : 'Trezor'} device, scanning the blockchain for funds, and calculating any claimable rewards. Please approve any public key export requests on your device.
+            Exporting public keys from your <span className="ucfirst">{this.state.vendor}</span> device, scanning the blockchain for funds, and calculating any claimable rewards. Please approve any public key export requests on your device.
           </p>
         </ActionListModal>
       </React.Fragment>

@@ -7,6 +7,32 @@ import createXpub from './create-xpub';
 import TrezorConnect from 'trezor-connect';
 
 let vendor;
+let ledgerFWVersion = 'default';
+
+const getUniqueInputs = (utxos) => {
+  let uniqueInputs = [];
+  let uniqueTxids = [];
+
+  for (let i = 0; i < utxos.length; i++) {
+    if (uniqueTxids.indexOf(utxos[i].txid) === -1) {
+      uniqueTxids.push(utxos[i].txid);
+      uniqueInputs.push(utxos[i]);
+    }
+  }
+
+  console.warn(`total utxos ${utxos.length} | unique utxos ${uniqueTxids.length}`);
+  
+  return uniqueInputs;
+};
+
+const setLedgerFWVersion = (name) => {
+  ledgerFWVersion = name;
+  console.warn(ledgerFWVersion);
+};
+
+const getLedgerFWVersion = () => {
+  return ledgerFWVersion;
+};
 
 const setVendor = (name) => {
   vendor = name;
@@ -18,7 +44,7 @@ const getVendor = () => {
 
 const getDevice = async () => {
   if (vendor === 'ledger') {
-    const transport = window.location.href.indexOf('ledger-webusb') > -1 ? await TransportWebUSB.create() : await TransportU2F.create();
+    const transport = window.location.href.indexOf('ledger-webusb') > -1 || ledgerFWVersion === 'webusb' ? await TransportWebUSB.create() : await TransportU2F.create();
     const ledger = new Btc(transport);
 
     ledger.close = () => transport.close();
@@ -148,32 +174,31 @@ const createTransaction = async function(utxos, outputs) {
       script_type: 'PAYTOADDRESS',
     });
 
-    for (let i = 0; i < utxos.length; i++) {
-      if (uniqueTxids.indexOf(utxos[i].txid) === -1) {
-        uniqueTxids.push(utxos[i].txid);
-        tx.refTxs.push({
-          hash: utxos[i].txid,
-          inputs: [],
-          bin_outputs: [],
-          version: utxos[i].version,
-          lock_time: utxos[i].locktime,
-        });
+    const uniqueInputs = getUniqueInputs(utxos);
+    
+    for (let i = 0; i < uniqueInputs.length; i++) {
+      tx.refTxs.push({
+        hash: uniqueInputs[i].txid,
+        inputs: [],
+        bin_outputs: [],
+        version: uniqueInputs[i].version,
+        lock_time: uniqueInputs[i].locktime,
+      });
 
-        for (let j = 0; j < utxos[i].inputs.length; j++) {
-          tx.refTxs[i].inputs.push({
-            prev_hash: utxos[i].inputs[j].txid,
-            prev_index: utxos[i].inputs[j].n,
-            script_sig: utxos[i].inputs[j].scriptSig.hex,
-            sequence: utxos[i].inputs[j].sequence,
-          });
-        }
-      
-        for (let j = 0; j < utxos[i].outputs.length; j++) {
-          tx.refTxs[i].bin_outputs.push({
-            amount: Number((Number(utxos[i].outputs[j].value).toFixed(8) * 100000000).toFixed(0)),
-            script_pubkey: utxos[i].outputs[j].scriptPubKey.hex,
-          });
-        }
+      for (let j = 0; j < uniqueInputs[i].inputs.length; j++) {
+        tx.refTxs[i].inputs.push({
+          prev_hash: uniqueInputs[i].inputs[j].txid,
+          prev_index: uniqueInputs[i].inputs[j].n,
+          script_sig: uniqueInputs[i].inputs[j].scriptSig.hex,
+          sequence: uniqueInputs[i].inputs[j].sequence,
+        });
+      }
+    
+      for (let j = 0; j < uniqueInputs[i].outputs.length; j++) {
+        tx.refTxs[tx.refTxs.length - 1].bin_outputs.push({
+          amount: Number((Number(uniqueInputs[i].outputs[j].value).toFixed(8) * 100000000).toFixed(0)),
+          script_pubkey: uniqueInputs[i].outputs[j].scriptPubKey.hex,
+        });
       }
     }
     
@@ -218,14 +243,16 @@ const getXpub = async derivationPath => {
   }
 };
 
-const ledger = {
+const hw = {
   getDevice,
   isAvailable,
   getAddress,
   createTransaction,
   getXpub,
   setVendor,
-  getVendor
+  getVendor,
+  setLedgerFWVersion,
+  getLedgerFWVersion
 };
 
-export default ledger;
+export default hw;

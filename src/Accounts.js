@@ -17,7 +17,7 @@ class Account extends React.Component {
       address: '',
       // debug options
       showXpub: null,
-      isDebug: window.location.href.indexOf('#enable-verify') > -1,
+      isDebug: window.location.href.indexOf('enable-verify') > -1,
     };
   }
 

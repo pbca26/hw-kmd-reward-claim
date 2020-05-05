@@ -8,7 +8,7 @@
   "private": true,
   "scripts": {
     "start": "HTTPS=true react-app-rewired start",
-    "build": "PUBLIC_URL=https://pbca26.github.io/hw-kmd-reward-claim react-app-rewired build",
+    "build": "PUBLIC_URL=https://www.atomicexplorer.com/wallet react-app-rewired build",
     "predeploy": "yarn build",
     "deploy": "gh-pages -d build",
     "test": "react-app-rewired test",
@@ -36,6 +36,7 @@
     "lodash": "^4.17.11",
     "react": "^16.6.3",
     "react-app-rewire-scss": "^1.0.2",
+    "react-device-detect": "^1.11.14",
     "react-dom": "^16.6.3",
     "satoshi-bitcoin": "^1.0.4",
     "scientific-to-decimal": "^1.1.1",

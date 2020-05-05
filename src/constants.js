@@ -1,8 +1,7 @@
 export const TX_FEE = 20000;
 export const INSIGHT_API_URL = {
-  default: 'https://insight.hyperdex.app/insight-api-komodo/',
+  default: 'https://kmd.explorer.dexstats.info/insight-api-komodo/',
   komodoplatform: 'https://explorer.komodoplatform.com:10000/kmd/api/',
-  dexstats: 'https://kmd.explorer.dexstats.info/insight-api-komodo/',
 };
 export const INSIGHT_EXPLORER_URL = 'https://kmdexplorer.io/';
 export const KOMODO = {
@@ -14,4 +13,12 @@ export const KOMODO = {
   pubKeyHash: 0x3C,
   scriptHash: 0x55,
   wif: 0xBC
+};
+export const LEDGER_FW_VERSIONS = {
+  default: 'Nano S firmware v1.5',
+  webusb: 'Nano S firmware v1.6', // nano s fw > 1.6 
+};
+export const VENDOR = {
+  ledger: 'Ledger',
+  trezor: 'Trezor',
 };
