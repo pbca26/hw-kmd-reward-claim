@@ -103,7 +103,7 @@ class Account extends React.Component {
                   className="account-index-selector"
                   name="address"
                   value={this.state.address}
-                  onChange={ (event) => this.updateInput(event) }>
+                  onChange={(event) => this.updateInput(event)}>
                   <option
                     key="rewards-output-address-default"
                     value="">
