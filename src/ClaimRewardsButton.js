@@ -166,7 +166,9 @@ class ClaimRewardsButton extends React.Component {
             You should receive a total of <strong>{humanReadableSatoshis(userOutput.value)} KMD</strong> to {!this.props.address.length && 'the new unused'}address: <strong>{userOutput.address}</strong><br />
           </p>
           {this.state.isDebug &&
-            <label className="switch" onClick={this.setSkipBroadcast}>
+            <label
+              className="switch"
+              onClick={this.setSkipBroadcast}>
               <input
                 type="checkbox"
                 name="skipBroadcast"

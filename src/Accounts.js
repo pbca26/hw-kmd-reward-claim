@@ -130,7 +130,9 @@ class Account extends React.Component {
               </div>
             )}
             {this.state.isDebug &&
-              <button className="button is-primary" onClick={() => this.showXpub(accountIndex)}>
+              <button
+                className="button is-primary"
+                onClick={() => this.showXpub(accountIndex)}>
                 {this.state.showXpub >=0 && this.state.showXpub == accountIndex ? 'Hide Xpub' : 'Show Xpub'}
               </button>
             }
@@ -140,7 +142,12 @@ class Account extends React.Component {
                 <strong>Xpub:</strong> {xpub}
               </div>
             }
-            <ClaimRewardsButton account={account} handleRewardClaim={this.handleRewardClaim} isClaimed={this.state.isClaimed} vendor={vendor} address={this.state.address}>
+            <ClaimRewardsButton
+              account={account}
+              handleRewardClaim={this.handleRewardClaim}
+              isClaimed={this.state.isClaimed}
+              vendor={vendor}
+              address={this.state.address}>
               Claim Rewards
             </ClaimRewardsButton>
           </div>
@@ -150,7 +157,11 @@ class Account extends React.Component {
   }
 }
 
-const Accounts = ({accounts, tiptime, vendor}) => (
+const Accounts = ({
+  accounts,
+  tiptime,
+  vendor
+}) => (
   <div className="Accounts">
     <div className="container">
       <div className="columns is-multiline">

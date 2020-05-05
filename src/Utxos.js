@@ -28,7 +28,9 @@ const Utxos = ({utxos, tiptime}) => {
         </tfoot>
         <tbody>
           {utxos.map(utxo => (
-            <tr key={utxo.id} className="utxo">
+            <tr
+              key={utxo.id}
+              className="utxo">
               <th>{utxo.address}</th>
               <td>{humanReadableSatoshis(utxo.satoshis)} KMD</td>
               <td className="text-center"><Boolean value={utxo.locktime} /></td>

@@ -207,7 +207,7 @@ class App extends React.Component {
                     className="explorer-selector"
                     name="explorerEndpoint"
                     value={this.state.explorerEndpoint}
-                    onChange={ (event) => this.updateExplorerEndpoint(event) }>
+                    onChange={(event) => this.updateExplorerEndpoint(event)}>
                     <option
                       key="explorer-selector-disabled"
                       disabled>
