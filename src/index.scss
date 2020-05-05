@@ -18,6 +18,10 @@ html {
   background: inherit !important;
 }
 
+.ucfirst {
+  text-transform: capitalize;
+}
+
 .vendor-trezor,
 .vendor-ledger {
   background: #fff;
