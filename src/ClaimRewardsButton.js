@@ -66,7 +66,10 @@ class ClaimRewardsButton extends React.Component {
       claimableAmount,
     } = this.props.account;
 
-    const outputs =  {address: this.getUnusedAddress(), value: (balance + claimableAmount)};
+    const outputs =  {
+      address: this.getUnusedAddress(),
+      value: (balance + claimableAmount)
+    };
 
     return outputs;
   };
@@ -129,7 +132,10 @@ class ClaimRewardsButton extends React.Component {
 
         this.props.handleRewardClaim(txid);
         this.setState({
-          success: <React.Fragment>Claim TXID: <TxidLink txid={txid}/></React.Fragment>
+          success:
+            <React.Fragment>
+              Claim TXID: <TxidLink txid={txid}/>
+            </React.Fragment>
         });
       }
     } catch (error) {
@@ -145,7 +151,10 @@ class ClaimRewardsButton extends React.Component {
 
     return (
       <React.Fragment>
-        <button className="button is-primary" disabled={this.props.isClaimed || !isClaimableAmount} onClick={this.claimRewards}>
+        <button
+          className="button is-primary"
+          disabled={this.props.isClaimed || !isClaimableAmount}
+          onClick={this.claimRewards}>
           {this.props.children}
         </button>
         <ActionListModal
@@ -158,7 +167,12 @@ class ClaimRewardsButton extends React.Component {
           </p>
           {this.state.isDebug &&
             <label className="switch" onClick={this.setSkipBroadcast}>
-              <input type="checkbox" name="skipBroadcast" value={this.state.skipBroadcast} checked={this.state.skipBroadcast} readOnly />
+              <input
+                type="checkbox"
+                name="skipBroadcast"
+                value={this.state.skipBroadcast}
+                checked={this.state.skipBroadcast}
+                readOnly />
               <span className="slider round"></span>
               <span className="slider-text">Don't broadcast transaction</span>
             </label>
