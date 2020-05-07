@@ -7,12 +7,12 @@ import CheckRewardsButton from './CheckRewardsButton';
 import Accounts from './Accounts';
 import WarnU2fCompatibility from './WarnU2fCompatibility';
 import Footer from './Footer';
-import {repository} from '../package.json';
+import {repository} from '../packsage.json';
 import './App.scss';
 import TrezorConnect from 'trezor-connect';
 import hw from './lib/hw';
 import {getLocalStorageVar, setLocalStorageVar} from './localstorage-util';
-import {INSIGHT_API_URL, LEDGER_FW_VERSIONS} from './constants';
+import {INSIGHT_API_URL, LEDGER_FW_VERSIONS, VENDOR} from './constants';
 import {setExplorerUrl, getInfo} from './lib/blockchain';
 
 class App extends React.Component {
@@ -263,7 +263,7 @@ class App extends React.Component {
                 <img
                   className="hw-graphic"
                   src={`${this.state.vendor}-logo.png`}
-                  alt={this.state.vendor === 'ledger' ? 'Ledger' : 'Trezor'} />
+                  alt={VENDOR[this.state.vendor]} />
                 {this.state.vendor === 'ledger' &&
                  (!this.state.ledgerDeviceType || this.state.ledgerDeviceType === 's') &&
                   <div className="ledger-device-selector">

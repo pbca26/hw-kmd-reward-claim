@@ -71,7 +71,9 @@ class Account extends React.Component {
             {(utxos.length > 0) && (
               <React.Fragment>
                 <h4>UTXOs</h4>
-                <Utxos utxos={utxos} tiptime={tiptime} />
+                <Utxos
+                  utxos={utxos}
+                  tiptime={tiptime} />
               </React.Fragment>
             )}
             {isClaimableAmount && (
@@ -138,7 +140,10 @@ class Account extends React.Component {
             }
             {this.state.showXpub >=0 &&
              this.state.showXpub == accountIndex &&
-              <div style={{'padding': '20px', 'wordBreak': 'break-all'}}>
+              <div style={{
+                'padding': '20px',
+                'wordBreak': 'break-all'
+              }}>
                 <strong>Xpub:</strong> {xpub}
               </div>
             }

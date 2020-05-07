@@ -6,6 +6,7 @@ import blockchain from './lib/blockchain';
 import getAddress from './lib/get-address';
 import updateActionState from './lib/update-action-state';
 import humanReadableSatoshis from './lib/human-readable-satoshis';
+import {VENDOR} from './constants';
 
 class ClaimRewardsButton extends React.Component {
   state = this.initialState;
@@ -92,7 +93,7 @@ class ClaimRewardsButton extends React.Component {
       updateActionState(this, currentAction, 'loading');
       const hwIsAvailable = await hw.isAvailable();
       if (!hwIsAvailable) {
-        throw new Error((this.props.vendor === 'ledger' ? 'Ledger' : 'Trezor') + ' device is unavailable!');
+        throw new Error(`${VENDOR[this.props.vendor]} device is unavailable!`);
       }
       updateActionState(this, currentAction, true);
 
@@ -104,7 +105,7 @@ class ClaimRewardsButton extends React.Component {
       const verify = true;
       const hwUnusedAddress = this.props.address.length ? this.props.address : await hw.getAddress(derivationPath, verify);
       if (hwUnusedAddress !== unusedAddress) {
-        throw new Error((this.props.vendor === 'ledger' ? 'Ledger' : 'Trezor') + ` derived address "${hwUnusedAddress}" doesn't match browser derived address "${unusedAddress}"`);
+        throw new Error(`${VENDOR[this.props.vendor]} derived address "${hwUnusedAddress}" doesn't match browser derived address "${unusedAddress}"`);
       }
       updateActionState(this, currentAction, true);
 
@@ -113,13 +114,21 @@ class ClaimRewardsButton extends React.Component {
       const outputs = this.getOutputs();
       const rewardClaimTransaction = await hw.createTransaction(utxos, outputs);
       if (!rewardClaimTransaction) {
-        throw new Error((this.props.vendor === 'ledger' ? 'Ledger' : 'Trezor') + ' failed to generate a valid transaction');
+        throw new Error(`${VENDOR[this.props.vendor]} failed to generate a valid transaction`);
       }
       updateActionState(this, currentAction, true);
       
       if (this.state.skipBroadcast) {
         this.setState({
-          success: <React.Fragment><span style={{'padding': '10px 0', 'display': 'block'}}>Raw transaction:</span> <span style={{'wordBreak': 'break-all', 'display': 'block'}}>{rewardClaimTransaction}</span></React.Fragment>
+          success: 
+            <React.Fragment>
+              <span style={{
+                'padding': '10px 0',
+                'display': 'block'
+              }}>
+                Raw transaction:</span> <span style={{'wordBreak': 'break-all', 'display': 'block'}}>{rewardClaimTransaction}
+              </span>
+            </React.Fragment>
         });
       } else {
         currentAction = 'broadcastTransaction';
