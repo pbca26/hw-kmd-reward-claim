@@ -1,0 +1,103 @@
+// TODO: refactor !important
+
+@media only screen and (max-width: 1000px) {
+  .App {
+    min-width: 320px !important;
+
+    .main {
+      .container {
+        &.content {
+          padding-top: 60px !important;
+
+          &.text-center {
+            padding-top: 20px !important;
+          }
+        }
+      }
+    }
+
+    .navbar-menu {
+      position: absolute;
+      top: 44px;
+      width: 100%;
+
+      .navbar-end {
+        margin: 0 auto;
+      }
+
+      .button {
+        &.is-primary {
+          margin-right: 45px !important;
+        }
+      }
+    }
+
+    h2,
+    h4 {
+      font-size: 1rem !important;
+    }
+
+    .vendor-selector {
+      .vendor-selector-items {
+        img {
+          height: 40px;
+          padding: 6px 15px;
+        }
+        .vendor-ledger {
+          margin-right: 10px;
+        }
+      }
+
+      h3 {
+        padding: 20px 0 !important;
+        font-size: 1rem;
+      }
+    }
+
+    .hw-graphic {
+      height: 55px !important;
+      padding: 10px 30px !important;
+      position: inherit !important;
+      transform: inherit !important;
+      display: inherit;
+      margin: 0 auto;
+    }
+
+    .Footer {
+      display: none;
+    }
+
+    .Header {
+      &.utxo-view {
+        .container {
+          display: block;
+          min-height: 6.5rem;
+        }
+      }
+    }
+
+    .account-index-selector {
+      display: block;
+      margin-left: 0;
+      margin-top: 7px;
+    }
+
+    .switch {
+      margin: 7px 0 25px 9px;
+    }
+
+    .notification.is-success {
+      word-break: break-word;
+    }
+
+    .ledger-device-selector {
+      margin-top: 20px !important;
+      transform: none !important;
+      position: inherit !important;
+    
+      .ledger-device-selector-buttons {
+        text-align: center;
+      }    
+    }
+  }
+}
