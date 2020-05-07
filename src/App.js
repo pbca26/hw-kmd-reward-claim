@@ -7,13 +7,14 @@ import CheckRewardsButton from './CheckRewardsButton';
 import Accounts from './Accounts';
 import WarnU2fCompatibility from './WarnU2fCompatibility';
 import Footer from './Footer';
-import {repository} from '../packsage.json';
+import {repository} from '../package.json';
 import './App.scss';
 import TrezorConnect from 'trezor-connect';
 import hw from './lib/hw';
 import {getLocalStorageVar, setLocalStorageVar} from './localstorage-util';
 import {INSIGHT_API_URL, LEDGER_FW_VERSIONS, VENDOR} from './constants';
 import {setExplorerUrl, getInfo} from './lib/blockchain';
+import {isMobile} from 'react-device-detect';
 
 class App extends React.Component {
   state = this.initialState;
@@ -44,6 +45,17 @@ class App extends React.Component {
     }
 
     this.checkExplorerEndpoints();
+
+    // limit mobile support to ledger webusb only
+    if (isMobile) {
+      ledger.setLedgerFWVersion('webusb');
+
+      this.setState({
+        vendor: 'ledger',
+        ledgerDeviceType: 's',
+        ledgerFWVersion: 'webusb',
+      });
+    }
   }
 
   updateLedgerDeviceType(type) {
@@ -97,6 +109,19 @@ class App extends React.Component {
     hw.setVendor();
     this.setVendor();
     this.setState(this.initialState);
+
+    // limit mobile support to ledger webusb only
+    if (isMobile) {
+      setTimeout(() => {
+        ledger.setLedgerFWVersion('webusb');
+
+        this.setState({
+          vendor: 'ledger',
+          ledgerDeviceType: 's',
+          ledgerFWVersion: 'webusb',
+        });
+      }, 50);
+    }
   }
 
   handleRewardData = ({accounts, tiptime}) => {
@@ -264,7 +289,8 @@ class App extends React.Component {
                   className="hw-graphic"
                   src={`${this.state.vendor}-logo.png`}
                   alt={VENDOR[this.state.vendor]} />
-                {this.state.vendor === 'ledger' &&
+                {!isMobile &&
+                 this.state.vendor === 'ledger' &&
                  (!this.state.ledgerDeviceType || this.state.ledgerDeviceType === 's') &&
                   <div className="ledger-device-selector">
                     <div className="ledger-device-selector-buttons">
