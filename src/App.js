@@ -48,7 +48,7 @@ class App extends React.Component {
 
     // limit mobile support to ledger webusb only
     if (isMobile) {
-      ledger.setLedgerFWVersion('webusb');
+      hw.setLedgerFWVersion('webusb');
 
       this.setState({
         vendor: 'ledger',
@@ -113,7 +113,7 @@ class App extends React.Component {
     // limit mobile support to ledger webusb only
     if (isMobile) {
       setTimeout(() => {
-        ledger.setLedgerFWVersion('webusb');
+        hw.setLedgerFWVersion('webusb');
 
         this.setState({
           vendor: 'ledger',
