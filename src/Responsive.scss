@@ -67,6 +67,40 @@
       display: none;
     }
 
+    .Modal {
+      &.is-visible {
+        display: block !important;
+      }
+
+      .modal-close {
+        position: absolute;
+        z-index: 100;
+        top: 7px;
+      }
+      .modal-content,
+      .modal-card {
+        margin: 0;
+        height: 100vh;
+        max-height: 100vh;
+      }
+      .card {
+        height: 100vh;
+        max-height: 100vh;
+      }
+      .card-content {
+        padding: 0.5rem;
+
+        p,
+        .panel {
+          padding-left: 0.5rem !important;
+        }
+
+        .notification {
+          padding: 0.75rem;
+        }
+      }
+    }
+
     .Header {
       &.utxo-view {
         .container {
