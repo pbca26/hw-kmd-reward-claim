@@ -101,6 +101,55 @@
       }
     }
 
+    .Accounts {
+      padding: 0;
+      margin-top: 38px;
+
+      .box .content > * {
+        padding-left: 0.4rem;
+      }
+
+      .balance {
+        font-size: 1rem;
+      }
+
+      small {
+        font-size: 0.9rem;
+        padding-top: 0.5rem;
+        display: block;
+      }
+
+      .receive-btn {
+        margin-top: -60px;
+      }
+
+      .content {
+        h4 {
+          padding-top: 25px !important;
+        }
+
+        .table-scroll-wrapper {
+          overflow-x: auto;
+        }
+
+        .table.is-striped {
+          th:first-child,
+          tr td:first-child {
+            padding-left: 0.5rem;
+          }
+          th:nth-child(3),
+          tr td:nth-child(3),
+          th:nth-child(5),
+          tr td:nth-child(5) {
+            display: none;
+          }
+          tbody th {
+            word-break: break-all;
+          }
+        }
+      }
+    }
+
     .Header {
       &.utxo-view {
         .container {
