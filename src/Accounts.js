@@ -135,11 +135,11 @@ class Account extends React.Component {
               <button
                 className="button is-primary"
                 onClick={() => this.showXpub(accountIndex)}>
-                {this.state.showXpub >=0 && this.state.showXpub == accountIndex ? 'Hide Xpub' : 'Show Xpub'}
+                {this.state.showXpub >=0 && this.state.showXpub === accountIndex ? 'Hide Xpub' : 'Show Xpub'}
               </button>
             }
             {this.state.showXpub >=0 &&
-             this.state.showXpub == accountIndex &&
+             this.state.showXpub === accountIndex &&
               <div style={{
                 'padding': '20px',
                 'wordBreak': 'break-all'
