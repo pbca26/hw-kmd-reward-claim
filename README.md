@@ -29,6 +29,18 @@ If you encounter any problems, be sure to check the FAQ below. If you still can'
 
 ## FAQ
 
+### Known Ledger issues
+- If you're using Ledger Nano S firmware 1.6 please select WEBUSB mode for it to work properly
+- If you're using Ledger Nano S firmware below 1.6 you can chose either U2F or WEBUSB
+- If you're using Ledger Nano X on Windows please select U2F mode for it to work properly
+
+### My Ledger Nano S (firmware v1.6) is not detected in browser
+Exit Komodo app on your device, grant browser permission to access Ledger, open Komodo app again then try to interact with the page again. This usually happens when you're trying to link your device for the first time. After the authorization procedure is done browser should detect the device automatically next time you connect it.
+
+### Ledger on Linux
+Add udev rules
+`wget -q -O - https://raw.githubusercontent.com/LedgerHQ/udev-rules/master/add_udev_rules.sh | sudo bash`
+
 - [I get an error signing or broadcasting my claim transaction, what went wrong?](#i-get-an-error-signing-or-broadcasting-my-claim-transaction-what-went-wrong)
 - [Why do all my funds get sent back to a new address?](#why-do-all-my-funds-get-sent-back-to-a-new-address)
 - [My browser is unsupported, can you support it?](#my-browser-is-unsupported-can-you-support-it)
@@ -46,7 +58,6 @@ This is most likely because you are using an outdated version of the Trezor firm
 Make sure the firmware on your Trezor is up to date before trying to claim your rewards.
 
 If you are sure your device is up to date then please [open an issue](https://github.com/pbca26/hw-kmd-reward-claim/issues/new) with as much information as possible and we'll try and help.
-
 
 ### Why do all my funds get sent back to a new address?
 
