@@ -2,6 +2,7 @@
 @import './App.scss';
 @import './dark-theme.scss';
 @import './light-theme.scss';
+@import './Responsive.scss';
 
 html,
 body {
@@ -16,6 +17,10 @@ body {
 
 html {
   background: inherit !important;
+}
+
+.ucfirst {
+  text-transform: capitalize;
 }
 
 .vendor-trezor,

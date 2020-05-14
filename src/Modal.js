@@ -1,7 +1,13 @@
 import React from 'react';
 import './Modal.scss';
 
-const Modal = ({children, title, show, isCloseable, handleClose}) => (
+const Modal = ({
+  children,
+  title,
+  show,
+  isCloseable,
+  handleClose
+}) => (
   <div className={`Modal modal ${show ? 'is-active' : ''}`}>
     <div onClick={() => isCloseable && handleClose && handleClose()}>
       <div className="modal-background"></div>

@@ -12,8 +12,9 @@ import './App.scss';
 import TrezorConnect from 'trezor-connect';
 import hw from './lib/hw';
 import {getLocalStorageVar, setLocalStorageVar} from './localstorage-util';
-import {INSIGHT_API_URL, LEDGER_FW_VERSIONS} from './constants';
+import {INSIGHT_API_URL, LEDGER_FW_VERSIONS, VENDOR} from './constants';
 import {setExplorerUrl, getInfo} from './lib/blockchain';
+import {isMobile} from 'react-device-detect';
 
 class App extends React.Component {
   state = this.initialState;
@@ -31,10 +32,25 @@ class App extends React.Component {
   }
 
   componentWillMount() {
-    TrezorConnect.manifest({
-      email: 'developer@xyz.com',
-      appUrl: 'http://your.application.com',
-    });
+    // this will work only on localhost
+    if (window.location.href.indexOf('devmode') > -1) {
+      TrezorConnect.init({
+        webusb: true,
+        popup: false,
+        manifest: {
+          email: 'developer@xyz.com',
+          appUrl: 'http://your.application.com',
+        },
+      })
+      .then((res) => {
+        TrezorConnect.renderWebUSBButton('.trezor-webusb-container');
+      });
+    } else {
+      TrezorConnect.manifest({
+        email: 'developer@xyz.com',
+        appUrl: 'http://your.application.com',
+      });
+    }
 
     if (!getLocalStorageVar('settings')) {
       setLocalStorageVar('settings', {theme: 'tdark'});
@@ -44,6 +60,17 @@ class App extends React.Component {
     }
 
     this.checkExplorerEndpoints();
+
+    // limit mobile support to ledger webusb only
+    if (isMobile) {
+      hw.setLedgerFWVersion('webusb');
+
+      this.setState({
+        vendor: 'ledger',
+        ledgerDeviceType: 's',
+        ledgerFWVersion: 'webusb',
+      });
+    }
   }
 
   updateLedgerDeviceType(type) {
@@ -97,6 +124,19 @@ class App extends React.Component {
     hw.setVendor();
     this.setVendor();
     this.setState(this.initialState);
+
+    // limit mobile support to ledger webusb only
+    if (isMobile) {
+      setTimeout(() => {
+        hw.setLedgerFWVersion('webusb');
+
+        this.setState({
+          vendor: 'ledger',
+          ledgerDeviceType: 's',
+          ledgerFWVersion: 'webusb',
+        });
+      }, 50);
+    }
   }
 
   handleRewardData = ({accounts, tiptime}) => {
@@ -207,7 +247,7 @@ class App extends React.Component {
                     className="explorer-selector"
                     name="explorerEndpoint"
                     value={this.state.explorerEndpoint}
-                    onChange={ (event) => this.updateExplorerEndpoint(event) }>
+                    onChange={(event) => this.updateExplorerEndpoint(event)}>
                     <option
                       key="explorer-selector-disabled"
                       disabled>
@@ -263,8 +303,9 @@ class App extends React.Component {
                 <img
                   className="hw-graphic"
                   src={`${this.state.vendor}-logo.png`}
-                  alt={this.state.vendor === 'ledger' ? 'Ledger' : 'Trezor'} />
-                {this.state.vendor === 'ledger' &&
+                  alt={VENDOR[this.state.vendor]} />
+                {!isMobile &&
+                 this.state.vendor === 'ledger' &&
                  (!this.state.ledgerDeviceType || this.state.ledgerDeviceType === 's') &&
                   <div className="ledger-device-selector">
                     <div className="ledger-device-selector-buttons">

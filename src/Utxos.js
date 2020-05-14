@@ -5,32 +5,42 @@ import humanRewardEndDate from './lib/human-reward-end-date';
 import Boolean from './Boolean';
 
 const Utxos = ({utxos, tiptime}) => {
-  const headings = ['Address', 'Value', 'Locktime', 'Rewards', 'Rewards Stop Accruing'];
+  const headings = [
+    'Address',
+    'Value',
+    'Locktime',
+    'Rewards',
+    'Rewards Stop Accruing'
+  ];
 
   return (
-    <table className="table is-striped">
-      <thead>
-        <tr>
-          {headings.map(heading => <th key={heading}>{heading}</th>)}
-        </tr>
-      </thead>
-      <tfoot>
-        <tr>
-          {headings.map(heading => <th key={heading}>{heading}</th>)}
-        </tr>
-      </tfoot>
-      <tbody>
-        {utxos.map(utxo => (
-          <tr key={utxo.id} className="utxo">
-            <th>{utxo.address}</th>
-            <td>{humanReadableSatoshis(utxo.satoshis)} KMD</td>
-            <td className="text-center"><Boolean value={utxo.locktime} /></td>
-            <td>{humanReadableSatoshis(getKomodoRewards({tiptime, ...utxo}))} KMD</td>
-            <td>{humanRewardEndDate(utxo)}</td>
+    <div className="table-scroll-wrapper">
+      <table className="table is-striped">
+        <thead>
+          <tr>
+            {headings.map(heading => <th key={heading}>{heading}</th>)}
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tfoot>
+          <tr>
+            {headings.map(heading => <th key={heading}>{heading}</th>)}
+          </tr>
+        </tfoot>
+        <tbody>
+          {utxos.map(utxo => (
+            <tr
+              key={utxo.id}
+              className="utxo">
+              <th>{utxo.address}</th>
+              <td>{humanReadableSatoshis(utxo.satoshis)} KMD</td>
+              <td className="text-center"><Boolean value={utxo.locktime} /></td>
+              <td>{humanReadableSatoshis(getKomodoRewards({tiptime, ...utxo}))} KMD</td>
+              <td>{humanRewardEndDate(utxo)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 };
 

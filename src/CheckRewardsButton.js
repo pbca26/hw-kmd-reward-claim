@@ -6,6 +6,7 @@ import blockchain from './lib/blockchain';
 import updateActionState from './lib/update-action-state';
 import {TX_FEE} from './constants';
 import ActionListModal from './ActionListModal';
+import {VENDOR} from './constants';
 
 class CheckRewardsButton extends React.Component {
   state = this.initialState;
@@ -60,7 +61,7 @@ class CheckRewardsButton extends React.Component {
       updateActionState(this, currentAction, 'loading');
       const hwIsAvailable = await hw.isAvailable();
       if (!hwIsAvailable) {
-        throw new Error((this.props.vendor === 'ledger' ? 'Ledger' : 'Trezor') + ' device is unavailable!');
+        throw new Error(`${VENDOR[this.props.vendor]} device is unavailable!`);
       }
       updateActionState(this, currentAction, true);
 

@@ -71,7 +71,9 @@ class Account extends React.Component {
             {(utxos.length > 0) && (
               <React.Fragment>
                 <h4>UTXOs</h4>
-                <Utxos utxos={utxos} tiptime={tiptime} />
+                <Utxos
+                  utxos={utxos}
+                  tiptime={tiptime} />
               </React.Fragment>
             )}
             {isClaimableAmount && (
@@ -103,7 +105,7 @@ class Account extends React.Component {
                   className="account-index-selector"
                   name="address"
                   value={this.state.address}
-                  onChange={ (event) => this.updateInput(event) }>
+                  onChange={(event) => this.updateInput(event)}>
                   <option
                     key="rewards-output-address-default"
                     value="">
@@ -130,17 +132,27 @@ class Account extends React.Component {
               </div>
             )}
             {this.state.isDebug &&
-              <button className="button is-primary" onClick={() => this.showXpub(accountIndex)}>
-                {this.state.showXpub >=0 && this.state.showXpub == accountIndex ? 'Hide Xpub' : 'Show Xpub'}
+              <button
+                className="button is-primary"
+                onClick={() => this.showXpub(accountIndex)}>
+                {this.state.showXpub >=0 && this.state.showXpub === accountIndex ? 'Hide Xpub' : 'Show Xpub'}
               </button>
             }
             {this.state.showXpub >=0 &&
-             this.state.showXpub == accountIndex &&
-              <div style={{'padding': '20px', 'wordBreak': 'break-all'}}>
+             this.state.showXpub === accountIndex &&
+              <div style={{
+                'padding': '20px',
+                'wordBreak': 'break-all'
+              }}>
                 <strong>Xpub:</strong> {xpub}
               </div>
             }
-            <ClaimRewardsButton account={account} handleRewardClaim={this.handleRewardClaim} isClaimed={this.state.isClaimed} vendor={vendor} address={this.state.address}>
+            <ClaimRewardsButton
+              account={account}
+              handleRewardClaim={this.handleRewardClaim}
+              isClaimed={this.state.isClaimed}
+              vendor={vendor}
+              address={this.state.address}>
               Claim Rewards
             </ClaimRewardsButton>
           </div>
@@ -150,7 +162,11 @@ class Account extends React.Component {
   }
 }
 
-const Accounts = ({accounts, tiptime, vendor}) => (
+const Accounts = ({
+  accounts,
+  tiptime,
+  vendor
+}) => (
   <div className="Accounts">
     <div className="container">
       <div className="columns is-multiline">

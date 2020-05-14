@@ -143,7 +143,6 @@ const createTransaction = async function(utxos, outputs) {
 
     return transaction;
   } else {
-    let uniqueTxids = [];
     let tx = {
       versionGroupId: 2301567109, // zec sapling forks only
       branchId: 1991772603, // zec sapling forks only

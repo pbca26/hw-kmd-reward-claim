@@ -8,7 +8,9 @@ class WarnU2fCompatibility extends React.Component {
   };
 
   async componentDidMount() {
-    this.setState({u2fSupported: await isSupported()});
+    this.setState({
+      u2fSupported: await isSupported()
+    });
   }
 
   render() {

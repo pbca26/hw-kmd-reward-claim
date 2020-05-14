@@ -3,7 +3,13 @@ import Modal from './Modal';
 import Boolean from './Boolean';
 import './ActionListModal.scss';
 
-const ActionListModal = ({children, actions = [], error, success, ...modalProps}) => (
+const ActionListModal = ({
+  children,
+  actions = [],
+  error,
+  success,
+  ...modalProps
+}) => (
   <div className="ActionListModal">
     <Modal isCloseable={error || success} {...modalProps}>
       {children}
