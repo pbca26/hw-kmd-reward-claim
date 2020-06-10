@@ -179,7 +179,7 @@ const createTransaction = async function(utxos, outputs) {
       script_type: 'PAYTOADDRESS',
     });
 
-    // reduce multiple vouts related to one tx into a single array element 
+    // reduce multiple vouts related to one tx into a single array element
     const uniqueInputs = getUniqueInputs(utxos);
     
     for (let i = 0; i < uniqueInputs.length; i++) {
@@ -189,7 +189,7 @@ const createTransaction = async function(utxos, outputs) {
         bin_outputs: [],
         version: uniqueInputs[i].version,
         lock_time: uniqueInputs[i].locktime,
-        version_group_id: KOMODO.versionGroupId,
+        version_group_id: uniqueInputs[i].nVersionGroupId,
         branch_id: KOMODO.consensusBranchId[uniqueInputs[i].version],
         extra_data: '0000000000000000000000',
       });
