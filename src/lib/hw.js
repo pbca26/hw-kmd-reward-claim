@@ -1,10 +1,11 @@
 import TransportU2F from '@ledgerhq/hw-transport-u2f';
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
-import Btc from '@ledgerhq/hw-app-btc';
+import Btc from '@ledgerhq/hw-app-btc/lib/Btc';
 import buildOutputScript from './build-output-script';
 import bip32Path from 'bip32-path';
 import createXpub from './create-xpub';
 import TrezorConnect from 'trezor-connect';
+import {KOMODO} from '../constants';
 
 let vendor;
 let ledgerFWVersion = 'default';
@@ -115,6 +116,7 @@ const createTransaction = async function(utxos, outputs) {
       );
       return [tx, utxo.vout];
     }));
+
     const associatedKeysets = utxos.map(utxo => utxo.derivationPath);
     const changePath = undefined;
     const outputScript = buildOutputScript([outputs]);
@@ -144,9 +146,8 @@ const createTransaction = async function(utxos, outputs) {
     return transaction;
   } else {
     let tx = {
-      versionGroupId: 2301567109, // zec sapling forks only
-      branchId: 1991772603, // zec sapling forks only
-      overwintered: true, // zec sapling forks only
+      versionGroupId: KOMODO.versionGroupId, // zec sapling forks only
+      branchId: KOMODO.consensusBranchId['4'], // zec sapling forks only
       version: 4, // zec sapling forks only
       push: false,
       coin: 'kmd',
@@ -160,7 +161,13 @@ const createTransaction = async function(utxos, outputs) {
     for (let i = 0; i < utxos.length; i++) {
       const derivationPathPartials = utxos[i].derivationPath.replace(/'/g, '').split('/');
       tx.inputs.push({
-        address_n: [(44 | 0x80000000) >>> 0, (141 | 0x80000000) >>> 0, (derivationPathPartials[2] | 0x80000000) >>> 0, derivationPathPartials[3], derivationPathPartials[4]],
+        address_n: [
+          (44 | 0x80000000) >>> 0,
+          (141 | 0x80000000) >>> 0,
+          (derivationPathPartials[2] | 0x80000000) >>> 0,
+          derivationPathPartials[3],
+          derivationPathPartials[4]
+        ],
         prev_index: utxos[i].vout,
         prev_hash: utxos[i].txid,
         amount: utxos[i].satoshis.toString(),
@@ -173,6 +180,7 @@ const createTransaction = async function(utxos, outputs) {
       script_type: 'PAYTOADDRESS',
     });
 
+    // reduce multiple vouts related to one tx into a single array element
     const uniqueInputs = getUniqueInputs(utxos);
     
     for (let i = 0; i < uniqueInputs.length; i++) {
@@ -182,6 +190,9 @@ const createTransaction = async function(utxos, outputs) {
         bin_outputs: [],
         version: uniqueInputs[i].version,
         lock_time: uniqueInputs[i].locktime,
+        version_group_id: uniqueInputs[i].nVersionGroupId,
+        branch_id: KOMODO.consensusBranchId[uniqueInputs[i].version],
+        extra_data: '0000000000000000000000',
       });
 
       for (let j = 0; j < uniqueInputs[i].inputs.length; j++) {
@@ -204,7 +215,11 @@ const createTransaction = async function(utxos, outputs) {
     const transaction = await TrezorConnect.signTransaction(tx)
     .then((res) => {
       if (res.payload.hasOwnProperty('error')) {
-        // res.payload
+        if (window.location.href.indexOf('devmode') > -1) {
+          console.warn('trezor tx obj', tx);
+          console.warn('trezor signTransaction error', res);
+        }
+
         return null;
       } else {
         return res.payload.serializedTx;
