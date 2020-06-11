@@ -6,6 +6,7 @@ const path = require('path');
 module.exports = {
   webpack: function (config, env) {
     if (env === 'production') {
+      // workaround for es6 node_modules minify errors
       config.module.rules[1].oneOf[1].include = [
         paths.appSrc,
         path.resolve(paths.appNodeModules, 'bitcoinjs-lib'),
@@ -15,7 +16,8 @@ module.exports = {
         path.resolve(paths.appNodeModules, 'get-komodo-rewards'),
         path.resolve(paths.appNodeModules, 'tiny-secp256k1'),
         path.resolve(paths.appNodeModules, 'bip32'),
-        path.resolve(paths.appNodeModules, 'typeforce')
+        path.resolve(paths.appNodeModules, 'typeforce'),
+        path.resolve(paths.appNodeModules, '@ledgerhq/hw-app-btc')
       ];
     }
 
