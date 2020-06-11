@@ -1,6 +1,6 @@
 import TransportU2F from '@ledgerhq/hw-transport-u2f';
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
-import Btc from '@ledgerhq/hw-app-btc';
+import Btc from '@ledgerhq/hw-app-btc/lib/Btc';
 import buildOutputScript from './build-output-script';
 import bip32Path from 'bip32-path';
 import createXpub from './create-xpub';
@@ -116,6 +116,7 @@ const createTransaction = async function(utxos, outputs) {
       );
       return [tx, utxo.vout];
     }));
+
     const associatedKeysets = utxos.map(utxo => utxo.derivationPath);
     const changePath = undefined;
     const outputScript = buildOutputScript([outputs]);
