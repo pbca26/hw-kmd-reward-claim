@@ -63,7 +63,7 @@ To clarify, to preserve privacy across accounts, UTXOs in different accounts wil
 If consolidating the UTXOs is an issue for you and you'd like a solution that doesn't link addresses together, then [please let us know](https://github.com/atomiclabs/ledger-kmd-reward-claim/issues/3).
 
 ## Build/compile issues
-If you are experiencing build issues that lead to minify errors add required modules to this [config-overrides.js](https://github.com/pbca26/hw-kmd-reward-claim/blob/master/config-overrides.js#L18) file.
+If you are experiencing build issues that lead to minify errors add required modules to [config-overrides.js](https://github.com/pbca26/hw-kmd-reward-claim/blob/master/config-overrides.js#L19) file.
 
 ## Credits
 
