@@ -23,7 +23,7 @@ export const KOMODO = {
 };
 export const LEDGER_FW_VERSIONS = {
   default: 'Nano S firmware v1.5',
-  webusb: 'Nano S firmware v1.6', // nano s fw > 1.6 
+  webusb: 'Nano S firmware v1.6 / WebUSB', // nano s fw > 1.6, nano x
 };
 export const VENDOR = {
   ledger: 'Ledger',
