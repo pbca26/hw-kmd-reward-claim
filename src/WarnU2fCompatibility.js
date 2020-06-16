@@ -1,6 +1,10 @@
 import React from 'react';
 import {isSupported} from 'u2f-api';
-import {isChrome, isOpera} from 'react-device-detect';
+import {
+  isChrome,
+  isOpera,
+  isFirefox,
+} from 'react-device-detect';
 import Modal from './Modal';
 
 class WarnU2fCompatibility extends React.Component {
@@ -8,6 +12,7 @@ class WarnU2fCompatibility extends React.Component {
     u2fSupported: null,
     isChrome: null,
     isOpera,
+    isFirefox,
   };
 
   async componentDidMount() {
@@ -15,6 +20,7 @@ class WarnU2fCompatibility extends React.Component {
       u2fSupported: await isSupported(),
       isChrome,
       isOpera,
+      isFirefox,
     });
   }
 
@@ -24,7 +30,8 @@ class WarnU2fCompatibility extends React.Component {
         title="Warning: U2F/WEBUSB Not Supported in This Browser"
         show={
           (this.state.u2fSupported === false && this.state.isChrome === false) ||
-          this.state.isOpera === true
+          this.state.isOpera === true ||
+          this.state.isFirefox === true
         }>
         <p>The U2F/WEBUSB API is required for the web browser to communicate with the <span className="ucfirst">{this.state.vendor}</span> device.</p>
         <p>Try using Chrome, Chromium or Brave instead.</p>
