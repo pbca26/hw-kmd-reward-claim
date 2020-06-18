@@ -198,7 +198,7 @@ const createTransaction = async function(utxos, outputs) {
       for (let j = 0; j < uniqueInputs[i].inputs.length; j++) {
         tx.refTxs[i].inputs.push({
           prev_hash: uniqueInputs[i].inputs[j].txid,
-          prev_index: uniqueInputs[i].inputs[j].n,
+          prev_index: uniqueInputs[i].inputs[j].vout,
           script_sig: uniqueInputs[i].inputs[j].scriptSig.hex,
           sequence: uniqueInputs[i].inputs[j].sequence,
         });
