@@ -193,6 +193,7 @@ const createTransaction = async function(utxos, outputs) {
         version_group_id: uniqueInputs[i].nVersionGroupId,
         branch_id: KOMODO.consensusBranchId[uniqueInputs[i].version],
         extra_data: '0000000000000000000000',
+        expiry: uniqueInputs[i].nExpiryHeight || 0,
       });
 
       for (let j = 0; j < uniqueInputs[i].inputs.length; j++) {
