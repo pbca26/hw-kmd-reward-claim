@@ -25,7 +25,8 @@ const walkDerivationPath = async node => {
     }
 
     for (const address of await Promise.all(addressApiRequests)) {
-      if (address.totalReceived > 0 || address.unconfirmedBalance > 0) {
+      if (address.totalReceived > 0 ||
+          address.unconfirmedBalance > 0) {
         consecutiveUnusedAddresses = 0;
       } else {
         consecutiveUnusedAddresses++;

@@ -12,8 +12,15 @@ import './App.scss';
 import TrezorConnect from 'trezor-connect';
 import hw from './lib/hw';
 import {getLocalStorageVar, setLocalStorageVar} from './localstorage-util';
-import {INSIGHT_API_URL, LEDGER_FW_VERSIONS, VENDOR} from './constants';
-import {setExplorerUrl, getInfo} from './lib/blockchain';
+import {
+  INSIGHT_API_URL,
+  LEDGER_FW_VERSIONS,
+  VENDOR
+} from './constants';
+import {
+  setExplorerUrl,
+  getInfo
+} from './lib/blockchain';
 import {isMobile} from 'react-device-detect';
 
 class App extends React.Component {
