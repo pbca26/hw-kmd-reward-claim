@@ -145,73 +145,60 @@ const createTransaction = async function(utxos, outputs) {
 
     return transaction;
   } else {
-    let tx = {
+    const tx = {
       versionGroupId: KOMODO.versionGroupId, // zec sapling forks only
       branchId: KOMODO.consensusBranchId['4'], // zec sapling forks only
       version: 4, // zec sapling forks only
       push: false,
       coin: 'kmd',
-      outputs: [],
-      inputs: [],
-      refTxs: [],
+      locktime: Math.floor(Date.now() / 1000) - 777,
+      outputs: [{
+        address: outputs.address,
+        amount: outputs.value.toString(),
+        script_type: 'PAYTOADDRESS',
+      }],
+      inputs: utxos.map((utxo) => {
+        const derivationPathPartials = utxo.derivationPath.replace(/'/g, '').split('/');
+        return {
+          address_n: [
+            (44 | 0x80000000) >>> 0,
+            (141 | 0x80000000) >>> 0,
+            (derivationPathPartials[2] | 0x80000000) >>> 0,
+            derivationPathPartials[3],
+            derivationPathPartials[4]
+          ],
+          prev_index: utxo.vout,
+          prev_hash: utxo.txid,
+          amount: utxo.satoshis.toString(),
+        };
+      }),
+      // reduce multiple vouts related to one tx into a single array element
+      refTxs: getUniqueInputs(utxos).map((refTx) => {
+        return {
+          hash: refTx.txid,
+          inputs: refTx.inputs.map((input) => {
+            return {
+              prev_hash: input.txid,
+              prev_index: input.vout,
+              script_sig: input.scriptSig.hex,
+              sequence: input.sequence,
+            };
+          }),
+          bin_outputs: refTx.outputs.map((output) => {
+            return {
+              amount: Number((Number(output.value).toFixed(8) * 100000000).toFixed(0)),
+              script_pubkey: output.scriptPubKey.hex,
+            };
+          }),
+          version: refTx.version,
+          lock_time: refTx.locktime,
+          version_group_id: refTx.nVersionGroupId,
+          branch_id: KOMODO.consensusBranchId[refTx.version],
+          extra_data: '0000000000000000000000',
+          expiry: refTx.nExpiryHeight || 0,
+        };
+      }),
     };
-
-    tx.locktime = Math.floor(Date.now() / 1000) - 777;
-
-    for (let i = 0; i < utxos.length; i++) {
-      const derivationPathPartials = utxos[i].derivationPath.replace(/'/g, '').split('/');
-      tx.inputs.push({
-        address_n: [
-          (44 | 0x80000000) >>> 0,
-          (141 | 0x80000000) >>> 0,
-          (derivationPathPartials[2] | 0x80000000) >>> 0,
-          derivationPathPartials[3],
-          derivationPathPartials[4]
-        ],
-        prev_index: utxos[i].vout,
-        prev_hash: utxos[i].txid,
-        amount: utxos[i].satoshis.toString(),
-      });
-    }
-
-    tx.outputs.push({
-      address: outputs.address,
-      amount: outputs.value.toString(),
-      script_type: 'PAYTOADDRESS',
-    });
-
-    // reduce multiple vouts related to one tx into a single array element
-    const uniqueInputs = getUniqueInputs(utxos);
-    
-    for (let i = 0; i < uniqueInputs.length; i++) {
-      tx.refTxs.push({
-        hash: uniqueInputs[i].txid,
-        inputs: [],
-        bin_outputs: [],
-        version: uniqueInputs[i].version,
-        lock_time: uniqueInputs[i].locktime,
-        version_group_id: uniqueInputs[i].nVersionGroupId,
-        branch_id: KOMODO.consensusBranchId[uniqueInputs[i].version],
-        extra_data: '0000000000000000000000',
-        expiry: uniqueInputs[i].nExpiryHeight || 0,
-      });
-
-      for (let j = 0; j < uniqueInputs[i].inputs.length; j++) {
-        tx.refTxs[i].inputs.push({
-          prev_hash: uniqueInputs[i].inputs[j].txid,
-          prev_index: uniqueInputs[i].inputs[j].vout,
-          script_sig: uniqueInputs[i].inputs[j].scriptSig.hex,
-          sequence: uniqueInputs[i].inputs[j].sequence,
-        });
-      }
-    
-      for (let j = 0; j < uniqueInputs[i].outputs.length; j++) {
-        tx.refTxs[tx.refTxs.length - 1].bin_outputs.push({
-          amount: Number((Number(uniqueInputs[i].outputs[j].value).toFixed(8) * 100000000).toFixed(0)),
-          script_pubkey: uniqueInputs[i].outputs[j].scriptPubKey.hex,
-        });
-      }
-    }
     
     const transaction = await TrezorConnect.signTransaction(tx)
     .then((res) => {
