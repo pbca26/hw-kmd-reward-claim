@@ -18,7 +18,9 @@ const ActionListModal = ({
           const {icon, description, state} = actions[action];
 
           return (
-            <div key={action} className={`panel-block ${state === 'loading' ? 'is-active' : ''}`}>
+            <div
+              key={action}
+              className={`panel-block ${state === 'loading' ? 'is-active' : ''}`}>
               <span className="left-icon icon has-text-grey">
                 <i className={icon}></i>
               </span>
@@ -28,7 +30,9 @@ const ActionListModal = ({
                   <Boolean value={state} />
                 ) : state === 'loading' ? (
                   <span className="icon has-text-grey">
-                    <i className="fas fa-circle-notch fa-spin" aria-hidden="true"></i>
+                    <i
+                      className="fas fa-circle-notch fa-spin"
+                      aria-hidden="true"></i>
                   </span>
                 ) : null}
               </div>
