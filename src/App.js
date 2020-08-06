@@ -70,7 +70,7 @@ class App extends React.Component {
 
     // limit mobile support to ledger webusb only
     if (isMobile) {
-      hw.setLedgerFWVersion('webusb');
+      hw.ledger.setLedgerFWVersion('webusb');
 
       this.setState({
         vendor: 'ledger',
@@ -85,7 +85,7 @@ class App extends React.Component {
       'ledgerDeviceType': type,
     });
 
-    if (type === 'x') hw.setLedgerFWVersion('webusb');
+    if (type === 'x') hw.ledger.setLedgerFWVersion('webusb');
   }
 
   updateLedgerFWVersion(e) {
@@ -93,7 +93,7 @@ class App extends React.Component {
       [e.target.name]: e.target.value,
     });
 
-    hw.setLedgerFWVersion(e.target.value);
+    hw.ledger.setLedgerFWVersion(e.target.value);
   }
 
   updateExplorerEndpoint(e) {
@@ -128,14 +128,14 @@ class App extends React.Component {
   };
 
   resetState = () => {
-    hw.setVendor();
+    //hw.setVendor();
     this.setVendor();
     this.setState(this.initialState);
 
     // limit mobile support to ledger webusb only
     if (isMobile) {
       setTimeout(() => {
-        hw.setLedgerFWVersion('webusb');
+        hw.ledger.setLedgerFWVersion('webusb');
 
         this.setState({
           vendor: 'ledger',
