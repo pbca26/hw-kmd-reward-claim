@@ -69,7 +69,7 @@ class ClaimRewardsButton extends React.Component {
 
     const outputs =  {
       address: this.getUnusedAddress(),
-      value: (balance + claimableAmount)
+      value: balance + claimableAmount,
     };
 
     return outputs;
@@ -162,7 +162,10 @@ class ClaimRewardsButton extends React.Component {
       <React.Fragment>
         <button
           className="button is-primary"
-          disabled={this.props.isClaimed || !isClaimableAmount}
+          disabled={
+            this.props.isClaimed ||
+            !isClaimableAmount
+          }
           onClick={this.claimRewards}>
           {this.props.children}
         </button>

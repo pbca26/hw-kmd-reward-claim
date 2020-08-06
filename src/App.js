@@ -12,8 +12,15 @@ import './App.scss';
 import TrezorConnect from 'trezor-connect';
 import hw from './lib/hw';
 import {getLocalStorageVar, setLocalStorageVar} from './localstorage-util';
-import {INSIGHT_API_URL, LEDGER_FW_VERSIONS, VENDOR} from './constants';
-import {setExplorerUrl, getInfo} from './lib/blockchain';
+import {
+  INSIGHT_API_URL,
+  LEDGER_FW_VERSIONS,
+  VENDOR
+} from './constants';
+import {
+  setExplorerUrl,
+  getInfo
+} from './lib/blockchain';
 import {isMobile} from 'react-device-detect';
 
 class App extends React.Component {
@@ -195,6 +202,8 @@ class App extends React.Component {
           </React.Fragment>
         </section>
 
+        <WarnU2fCompatibility vendor={this.state.vendor} />
+
         <Footer>
           <p>
             <strong>Hardware wallet KMD Rewards Claim</strong> by <a target="_blank" rel="noopener noreferrer" href="https://github.com/atomiclabs">Atomic Labs</a> and <a target="_blank" rel="noopener noreferrer" href="https://github.com/komodoplatform">Komodo Platform</a>.
@@ -291,7 +300,7 @@ class App extends React.Component {
             {this.state.accounts.length === 0 ? (
               <React.Fragment>
                 <div className="container content">
-                  <h2>Claim your KMD rewards on your <span className="ucfirst">{this.state.vendor}</span> device.</h2>
+                  <h2>Claim KMD rewards on your <span className="ucfirst">{this.state.vendor}</span> device.</h2>
                   {this.state.vendor === 'ledger' &&
                     <p>Make sure the KMD app and firmware on your Ledger are up to date, then connect your Ledger, open the KMD app, and click the "Check Rewards" button.</p>
                   }
@@ -299,6 +308,9 @@ class App extends React.Component {
                     <p>Make sure the firmware on your Trezor are up to date, then connect your Trezor and click the "Check Rewards" button. Please be aware that you'll need to allow popup windows for Trezor to work properly.</p>
                   }
                   <p>Also, make sure that your <span className="ucfirst">{this.state.vendor}</span> is initialized prior using <strong>KMD Rewards Claim tool</strong>.</p>
+                  {this.state.vendor === 'ledger' &&
+                    <p>Have trouble accessing your Ledger device? Read here about <a target="_blank" rel="noopener noreferrer" href="https://github.com/pbca26/hw-kmd-reward-claim/wiki/First-time-using-Ledger-Nano-S-(firmware-v1.6)---Nano-X">first time use</a>.</p>
+                  }
                 </div>
                 <img
                   className="hw-graphic"
@@ -347,8 +359,6 @@ class App extends React.Component {
               <Accounts {...this.state} />
             )}
           </section>
-
-          <WarnU2fCompatibility vendor={this.state.vendor} />
 
           <Footer>
             <p>

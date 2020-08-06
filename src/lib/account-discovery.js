@@ -25,7 +25,8 @@ const walkDerivationPath = async node => {
     }
 
     for (const address of await Promise.all(addressApiRequests)) {
-      if (address.totalReceived > 0 || address.unconfirmedBalance > 0) {
+      if (address.totalReceived > 0 ||
+          address.unconfirmedBalance > 0) {
         consecutiveUnusedAddresses = 0;
       } else {
         consecutiveUnusedAddresses++;
@@ -80,7 +81,7 @@ const getAddressUtxos = async addresses => {
   return await Promise.all(utxos.map(async utxo => {
     const addressInfo = addresses.find(a => a.address === utxo.address);
 
-    const [{rawtx}, {locktime, vin, vout, version}] = await Promise.all([
+    const [{rawtx}, {locktime, vin, vout, version, nVersionGroupId, nExpiryHeight}] = await Promise.all([
       blockchain.getRawTransaction(utxo.txid),
       blockchain.getTransaction(utxo.txid)
     ]);
@@ -93,7 +94,9 @@ const getAddressUtxos = async addresses => {
       rawtx,
       inputs: vin,
       outputs: vout,
-      version
+      version,
+      nVersionGroupId,
+      nExpiryHeight,
     };
   }));
 };

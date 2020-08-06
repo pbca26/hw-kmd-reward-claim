@@ -7,7 +7,7 @@
 ## Supported browsers
 Current version is tested to work in Chrome. Other browser like Brave or Firefox might not work well in web usb mode.
 
-Also, you can consult with this page to see if your browser is capable to commuicate with Ledger/Trezor device [caniuse.com/#feat=u2f](https://caniuse.com/#feat=u2f).
+Also, you can consult with this page to see if your browser is capable to commuicate with Ledger/Trezor device [U2F](https://caniuse.com/#feat=u2f), [WEBUSB](https://caniuse.com/#feat=webusb).
 
 ## Usage on Ledger
 
@@ -29,7 +29,7 @@ If you encounter any problems, be sure to check the FAQ below. If you still can'
 
 ## FAQ
 
-### My Ledger Nano S (firmware v1.6) is not detected in browser
+### My Ledger Nano S (firmware v1.6) / Nano X is not detected in browser
 Exit Komodo app on your device, grant browser permission to access Ledger, open Komodo app again then try to interact with the page again. This usually happens when you're trying to link your device for the first time. After the authorization procedure is done browser should detect the device automatically next time you connect it.
 
 ### Ledger on Linux
@@ -61,6 +61,9 @@ We follow the same BIP44 standard that Ledger Live/Trezor wallet follows. We wil
 To clarify, to preserve privacy across accounts, UTXOs in different accounts will **never** be mixed together, this is why you need to claim your rewards in each account separately. For increased anonymity, you should claim each account on different days to avoid time analysis linking the separate claims.
 
 If consolidating the UTXOs is an issue for you and you'd like a solution that doesn't link addresses together, then [please let us know](https://github.com/atomiclabs/ledger-kmd-reward-claim/issues/3).
+
+## Build/compile issues
+If you are experiencing build issues that lead to minify errors add required modules to [config-overrides.js](https://github.com/pbca26/hw-kmd-reward-claim/blob/master/config-overrides.js#L19) file.
 
 ## Credits
 
