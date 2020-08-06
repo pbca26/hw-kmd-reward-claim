@@ -12,9 +12,9 @@ class CheckRewardsButton extends React.Component {
   state = this.initialState;
 
   get initialState() {
-    if (this.props.vendor) {
+    /*if (this.props.vendor) {
       hw.setVendor(this.props.vendor);
-    }
+    }*/
 
     return {
       isCheckingRewards: false,
@@ -59,7 +59,7 @@ class CheckRewardsButton extends React.Component {
     try {
       currentAction = 'connect';
       updateActionState(this, currentAction, 'loading');
-      const hwIsAvailable = await hw.isAvailable();
+      const hwIsAvailable = await hw[this.props.vendor].isAvailable();
       if (!hwIsAvailable) {
         throw new Error(`${VENDOR[this.props.vendor]} device is unavailable!`);
       }
@@ -68,7 +68,7 @@ class CheckRewardsButton extends React.Component {
       currentAction = 'approve';
       updateActionState(this, currentAction, 'loading');
       let [accounts, tiptime] = await Promise.all([
-        accountDiscovery(),
+        accountDiscovery(this.props.vendor),
         blockchain.getTipTime()
       ]);
 
@@ -85,6 +85,7 @@ class CheckRewardsButton extends React.Component {
 
       this.setState({...this.initialState});
     } catch (error) {
+      console.warn(error);
       updateActionState(this, currentAction, false);
       this.setState({error: error.message});
     }

@@ -91,7 +91,7 @@ class ClaimRewardsButton extends React.Component {
     try {
       currentAction = 'connect';
       updateActionState(this, currentAction, 'loading');
-      const hwIsAvailable = await hw.isAvailable();
+      const hwIsAvailable = await hw[this.props.vendor].isAvailable();
       if (!hwIsAvailable) {
         throw new Error(`${VENDOR[this.props.vendor]} device is unavailable!`);
       }
@@ -103,7 +103,7 @@ class ClaimRewardsButton extends React.Component {
       const unusedAddress = this.getUnusedAddress();
       const derivationPath = `44'/141'/${accountIndex}'/0/${this.getUnusedAddressIndex()}`;
       const verify = true;
-      const hwUnusedAddress = this.props.address.length ? this.props.address : await hw.getAddress(derivationPath, verify);
+      const hwUnusedAddress = this.props.address.length ? this.props.address : await hw[this.props.vendor].getAddress(derivationPath, verify);
       if (hwUnusedAddress !== unusedAddress) {
         throw new Error(`${VENDOR[this.props.vendor]} derived address "${hwUnusedAddress}" doesn't match browser derived address "${unusedAddress}"`);
       }
@@ -112,7 +112,7 @@ class ClaimRewardsButton extends React.Component {
       currentAction = 'approveTransaction';
       updateActionState(this, currentAction, 'loading');
       const outputs = this.getOutputs();
-      const rewardClaimTransaction = await hw.createTransaction(utxos, outputs);
+      const rewardClaimTransaction = await hw[this.props.vendor].createTransaction(utxos, outputs);
       if (!rewardClaimTransaction) {
         throw new Error(`${VENDOR[this.props.vendor]} failed to generate a valid transaction`);
       }
