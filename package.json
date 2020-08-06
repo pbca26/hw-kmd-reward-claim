@@ -40,7 +40,7 @@
     "react-dom": "^16.6.3",
     "satoshi-bitcoin": "^1.0.4",
     "scientific-to-decimal": "^1.1.1",
-    "trezor-connect": "^8.1.2",
+    "trezor-connect": "^8.1.5",
     "u2f-api": "^1.0.9"
   },
   "devDependencies": {
