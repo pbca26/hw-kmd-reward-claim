@@ -68,7 +68,7 @@ export const getInfo = async (explorerUrl) => {
 };
 
 const blockchain = {
-  get,
+  getInfo,
   getAddress,
   getUtxos,
   getTransaction,
