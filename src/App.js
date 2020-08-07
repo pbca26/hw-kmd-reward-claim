@@ -11,17 +11,22 @@ import {repository} from '../package.json';
 import './App.scss';
 import TrezorConnect from 'trezor-connect';
 import hw from './lib/hw';
-import {getLocalStorageVar, setLocalStorageVar} from './localstorage-util';
+import {
+  getLocalStorageVar,
+  setLocalStorageVar,
+} from './localstorage-util';
 import {
   INSIGHT_API_URL,
   LEDGER_FW_VERSIONS,
-  VENDOR
+  VENDOR,
 } from './constants';
 import {
   setExplorerUrl,
-  getInfo
+  getInfo,
 } from './lib/blockchain';
 import {isMobile} from 'react-device-detect';
+
+const MAX_TIP_TIME_DIFF = 3600 * 24;
 
 class App extends React.Component {
   state = this.initialState;
@@ -104,6 +109,20 @@ class App extends React.Component {
     setExplorerUrl(e.target.value);
   }
 
+  checkTipTime(tiptime) {
+    if (!tiptime || Number(tiptime) <= 0) return tiptime;
+
+    const currentTimestamp = Date.now() / 1000;
+    const secondsDiff = Math.floor(Number(currentTimestamp) - Number(tiptime));
+
+    if (Math.abs(secondsDiff) < MAX_TIP_TIME_DIFF) {
+      return tiptime;
+    } else {
+      console.warn('tiptime vs local time is too big, use local time to calc rewards!');
+      return currentTimestamp;
+    }
+  }
+
   checkExplorerEndpoints = async () => {
     const getInfoRes =  await Promise.all(Object.keys(INSIGHT_API_URL).map((value, index) => {
       return getInfo(INSIGHT_API_URL[value]);
@@ -147,6 +166,8 @@ class App extends React.Component {
   }
 
   handleRewardData = ({accounts, tiptime}) => {
+    tiptime = this.checkTipTime(tiptime);
+
     this.setState({accounts, tiptime});
   }
 
@@ -280,6 +301,7 @@ class App extends React.Component {
                     {(this.state.vendor === 'trezor' || (this.state.vendor === 'ledger' && this.state.ledgerDeviceType)) &&
                       <CheckRewardsButton
                         handleRewardData={this.handleRewardData}
+                        checkTipTime={this.checkTipTime}
                         vendor={this.state.vendor}>
                         <strong>Check Rewards</strong>
                       </CheckRewardsButton>
