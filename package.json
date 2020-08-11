@@ -27,6 +27,8 @@
     "@ledgerhq/hw-app-btc": "^5.16.0",
     "@ledgerhq/hw-transport-u2f": "^4.77.0",
     "@ledgerhq/hw-transport-webusb": "^4.77.0",
+    "@ledgerhq/hw-transport-web-ble": "^4.77.0",
+    "@ledgerhq/hw-transport-webhid": "^4.77.0",
     "babel-polyfill": "^6.26.0",
     "bip32-path": "^0.4.2",
     "bs58check": "^2.1.2",
