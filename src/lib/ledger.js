@@ -32,6 +32,10 @@ const getLedgerFWVersion = () => {
   return ledgerFWVersion;
 };
 
+const resetTransport = () => {
+  if (ledgerBLE) ledgerBLE.closeConnection();
+};
+
 const getDevice = async () => {
   let newTransport;
   let transportType = 'u2f'; // default
@@ -58,7 +62,11 @@ const getDevice = async () => {
 
   ledger.close = () => transportType !== 'ble' ? newTransport.close() : {};
 
-  if (transportType === 'ble' && !ledgerBLE) ledgerBLE = ledger;
+  if (transportType === 'ble' &&
+      !ledgerBLE) {
+    ledgerBLE = ledger;
+    ledgerBLE.closeConnection = () => newTransport.close();
+  }
 
   return ledger;
 };
@@ -67,7 +75,7 @@ const isAvailable = async () => {
   const ledger = await getDevice();
 
   try {
-    await ledger.getWalletPublicKey(`m/44'/141'/0'/0/0`);
+    await ledger.getWalletPublicKey(`m/44'/141'/0'/0/0`, {verify: window.location.href.indexOf('ledger-ble') > -1 || ledgerFWVersion === 'ble'});
     await ledger.close();
     return true;
   } catch (error) {
@@ -77,7 +85,7 @@ const isAvailable = async () => {
 
 const getAddress = async (derivationPath, verify) => {
   const ledger = await getDevice();
-  const {bitcoinAddress} = await ledger.getWalletPublicKey(derivationPath, {verify});
+  const {bitcoinAddress} = await ledger.getWalletPublicKey(derivationPath, {verify: window.location.href.indexOf('ledger-ble') > -1 || ledgerFWVersion === 'ble' ? true : verify});
   await ledger.close();
 
   return bitcoinAddress;
@@ -155,7 +163,8 @@ const ledger = {
   createTransaction,
   getXpub,
   setLedgerFWVersion,
-  getLedgerFWVersion
+  getLedgerFWVersion,
+  resetTransport,
 };
 
 export default ledger;

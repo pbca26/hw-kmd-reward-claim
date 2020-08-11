@@ -147,9 +147,10 @@ class App extends React.Component {
   };
 
   resetState = () => {
-    //hw.setVendor();
     this.setVendor();
     this.setState(this.initialState);
+    // TODO: auto-close connection after idle time
+    hw.ledger.resetTransport();
 
     // limit mobile support to ledger webusb only
     if (isMobile) {
@@ -356,7 +357,6 @@ class App extends React.Component {
                       </button>
                     </div>
                     {this.state.ledgerDeviceType &&
-                     (this.state.ledgerDeviceType === 's' || (this.state.ledgerDeviceType === 'x' && window.location.href.indexOf('devmode') > -1)) &&
                       <div className="ledger-fw-version-selector-block">
                         Mode
                         <select

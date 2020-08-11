@@ -27,8 +27,8 @@ export const LEDGER_FW_VERSIONS = {
     webusb: 'Nano S firmware v1.6 / WebUSB', // nano s fw > 1.6, nano x
   },
   nano_x: {
-    webusb: 'WebUSB',
-    ble: 'Bluetooth',
+    webusb: 'WebUSB (default)',
+    ble: 'Bluetooth (experimental)',
   },
 };
 export const VENDOR = {
