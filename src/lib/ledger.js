@@ -4,8 +4,8 @@ import bip32Path from 'bip32-path';
 import createXpub from './create-xpub';
 import transport from './ledger-transport';
 
-let vendor;
 let ledgerFWVersion = 'default';
+let ledgerBLE;
 
 const getUniqueInputs = utxos => {
   let uniqueInputs = [];
@@ -33,10 +33,32 @@ const getLedgerFWVersion = () => {
 };
 
 const getDevice = async () => {
-  const newTransport = window.location.href.indexOf('ledger-webusb') > -1 || ledgerFWVersion === 'webusb' ? await transport.webusb.create() : await transport.u2f.create();
+  let newTransport;
+  let transportType = 'u2f'; // default
+
+  if (window.location.href.indexOf('ledger-webusb') > -1 ||
+      ledgerFWVersion === 'webusb') {
+    transportType = 'webusb';
+  } else if (
+    window.location.href.indexOf('ledger-ble') > -1 ||
+    ledgerFWVersion === 'ble'
+  ) {
+    transportType = 'ble';
+  } else if (
+    window.location.href.indexOf('ledger-hid') > -1 ||
+    ledgerFWVersion === 'hid'
+  ) {
+    transportType = 'hid';
+  }
+
+  if (ledgerBLE && transportType === 'ble') return ledgerBLE;
+
+  newTransport = await transport[transportType].create();
   const ledger = new Btc(newTransport);
 
-  ledger.close = () => newTransport.close();
+  ledger.close = () => transportType !== 'ble' ? newTransport.close() : {};
+
+  if (transportType === 'ble' && !ledgerBLE) ledgerBLE = ledger;
 
   return ledger;
 };
