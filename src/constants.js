@@ -29,3 +29,7 @@ export const VENDOR = {
   ledger: 'Ledger',
   trezor: 'Trezor',
 };
+export const TREZOR_FW_MIN_VERSION = {
+  'T': '2.3.1',
+  '1': '1.9.1',
+};
