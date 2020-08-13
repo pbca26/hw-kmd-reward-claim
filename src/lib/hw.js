@@ -1,5 +1,6 @@
 import TransportU2F from '@ledgerhq/hw-transport-u2f';
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
+import TransportWebHID from '@ledgerhq/hw-transport-webhid';
 import Btc from '@ledgerhq/hw-app-btc';
 import buildOutputScript from './build-output-script';
 import bip32Path from 'bip32-path';
@@ -9,6 +10,7 @@ import {KOMODO} from '../constants';
 
 let vendor;
 let ledgerFWVersion = 'default';
+export let ledgerTransport;
 
 const getUniqueInputs = (utxos) => {
   let uniqueInputs = [];
@@ -24,6 +26,11 @@ const getUniqueInputs = (utxos) => {
   console.warn(`total utxos ${utxos.length} | unique utxos ${uniqueTxids.length}`);
   
   return uniqueInputs;
+};
+
+const setLedgerTransport = (transport) => {
+  ledgerTransport = transport;
+  console.warn(ledgerTransport);
 };
 
 const setLedgerFWVersion = (name) => {
@@ -45,12 +52,24 @@ const getVendor = () => {
 
 const getDevice = async () => {
   if (vendor === 'ledger') {
-    const transport = window.location.href.indexOf('ledger-webusb') > -1 || ledgerFWVersion === 'webusb' ? await TransportWebUSB.create() : await TransportU2F.create();
-    const ledger = new Btc(transport);
+    if (ledgerTransport) {
+      let transport = window.location.href.indexOf('ledger-webusb') > -1 || ledgerFWVersion === 'webusb' ? await TransportWebUSB.create() : await TransportU2F.create();
+      if (window.location.href.indexOf('ledger-webhid') > -1) {
+        console.warn('ledger TransportWebHID');
+        transport = TransportWebHID.create();
+      }
+      const ledger = new Btc(transport);
 
-    ledger.close = () => transport.close();
+      ledger.close = () => transport.close();
 
-    return ledger;
+      return ledger;
+    } else {
+      const ledger = new Btc(ledgerTransport);
+      
+      ledger.close = () => ledgerTransport.close();
+
+      return ledger;
+    }
   } else {
     return TrezorConnect;
   }
@@ -254,7 +273,8 @@ const hw = {
   setVendor,
   getVendor,
   setLedgerFWVersion,
-  getLedgerFWVersion
+  getLedgerFWVersion,
+  setLedgerTransport,
 };
 
 export default hw;
