@@ -54,7 +54,8 @@ const getLedgerDeviceInfo = async() => {
           targetId
         });
       } catch(e) {
-        if (e.name === "DisconnectedDeviceDuringOperation") {
+        // re-init transport if connection is lost
+        if (e.name === 'DisconnectedDeviceDuringOperation') {
           ledgerTransport.close();
           const transport = window.location.href.indexOf('ledger-webusb') > -1 ? await TransportWebUSB.create() : await TransportU2F.create();
           hw.setLedgerTransport(transport);
@@ -65,7 +66,54 @@ const getLedgerDeviceInfo = async() => {
   });
 };
 
+// ref: https://github.com/LedgerHQ/ledgerjs/issues/365
+const getLedgerAppInfo = async() => {
+  return new Promise(async(resolve, reject) => {    
+    if (!ledgerTransport) {
+      const transport = window.location.href.indexOf('ledger-webusb') > -1 ? await TransportWebUSB.create() : await TransportU2F.create();
+      hw.setLedgerTransport(transport);
+    }
+
+    const interval = setInterval(async() => {
+      const transport = ledgerTransport;
+      console.warn('transport', ledgerTransport);
+      try {
+        const r = await transport.send(0xb0, 0x01, 0x00, 0x00);
+        let i = 0;
+        const format = r[i++];
+        //invariant(format === 1, "getAppAndVersion: format not supported");
+        const nameLength = r[i++];
+        const name = r.slice(i, (i += nameLength)).toString('ascii');
+        const versionLength = r[i++];
+        const version = r.slice(i, (i += versionLength)).toString('ascii');
+        const flagLength = r[i++];
+        const flags = r.slice(i, (i += flagLength));
+
+        console.warn('getAppInfo', name);
+
+        if (name === 'Komodo') {
+          clearInterval(interval);
+          transport.close();
+          resolve({
+            name,
+            version,
+            flags,
+          });
+        }
+      } catch (e) {
+        // re-init transport if connection is lost
+        if (e.name === 'DisconnectedDeviceDuringOperation') {
+          ledgerTransport.close();
+          const transport = window.location.href.indexOf('ledger-webusb') > -1 ? await TransportWebUSB.create() : await TransportU2F.create();
+          hw.setLedgerTransport(transport);
+        }
+      }
+    }, RECHECK_TIMEOUT);
+  });
+};
+
 const ledgerFw = {
+  getLedgerDeviceInfo,
   getLedgerAppInfo,
 };
 
