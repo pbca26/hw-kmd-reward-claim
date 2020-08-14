@@ -38,7 +38,10 @@ const getLedgerFWVersion = () => {
 };
 
 const resetTransport = () => {
-  if (ledgerTransport) ledgerTransport.closeConnection();
+  if (ledgerTransport) {
+    ledgerTransport.closeConnection();
+    ledgerTransport = null;
+  }
 };
 
 const getDevice = async () => {
