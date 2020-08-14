@@ -6,6 +6,7 @@ import Header from './Header';
 import CheckRewardsButton from './CheckRewardsButton';
 import Accounts from './Accounts';
 import WarnU2fCompatibility from './WarnU2fCompatibility';
+import FirmwareCheckModal from './FirmwareCheckModal';
 import Footer from './Footer';
 import {repository} from '../package.json';
 import './App.scss';
@@ -73,7 +74,8 @@ class App extends React.Component {
     }
   }
 
-  updateLedgerDeviceType(type) {
+  updateLedgerDeviceType = (type) => {
+    console.warn(type)
     this.setState({
       'ledgerDeviceType': type,
     });
@@ -81,12 +83,12 @@ class App extends React.Component {
     if (type === 'x') hw.setLedgerFWVersion('webusb');
   }
 
-  updateLedgerFWVersion(e) {
+  updateLedgerFWVersion = (e) => {
     this.setState({
-      [e.target.name]: e.target.value,
+      'ledgerFWVersion': e.hasOwnProperty('target') ? e.target.value : e,
     });
 
-    hw.setLedgerFWVersion(e.target.value);
+    hw.setLedgerFWVersion(e.hasOwnProperty('target') ? e.target.value : e);
   }
 
   updateExplorerEndpoint(e) {
@@ -143,7 +145,7 @@ class App extends React.Component {
     this.setState({accounts, tiptime});
   }
 
-  setVendor = (vendor) => {
+  setVendor = async (vendor) => {
     this.setState({vendor});
   }
 
@@ -288,6 +290,11 @@ class App extends React.Component {
               </div>
             </div>
           </Header>
+
+          <FirmwareCheckModal
+            vendor={this.state.vendor}
+            updateLedgerDeviceType={this.updateLedgerDeviceType}
+            updateLedgerFWVersion={this.updateLedgerFWVersion} />
 
           <section className="main">
             {this.state.accounts.length === 0 ? (

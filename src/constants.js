@@ -8,7 +8,7 @@ export const KOMODO = {
   messagePrefix: '\x18Komodo Signed Message:\n',
   bip32: {
     public: 0x0488B21E,
-    private: 0x0488ADE4
+    private: 0x0488ADE4,
   },
   consensusBranchId: {
     1: 0x00,
@@ -19,7 +19,7 @@ export const KOMODO = {
   versionGroupId: 0x892F2085,
   pubKeyHash: 0x3C,
   scriptHash: 0x55,
-  wif: 0xBC
+  wif: 0xBC,
 };
 export const LEDGER_FW_VERSIONS = {
   default: 'Nano S firmware v1.5',

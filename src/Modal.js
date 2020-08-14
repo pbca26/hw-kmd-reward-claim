@@ -6,7 +6,7 @@ const Modal = ({
   title,
   show,
   isCloseable,
-  handleClose
+  handleClose,
 }) => (
   <div className={`Modal modal ${show ? 'is-active' : ''}`}>
     <div onClick={() => isCloseable && handleClose && handleClose()}>
