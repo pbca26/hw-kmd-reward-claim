@@ -173,6 +173,7 @@ const ledger = {
   getLedgerFWVersion,
   setLedgerTransport,
   resetTransport,
+  transportOptions: transport,
 };
 
 export default ledger;

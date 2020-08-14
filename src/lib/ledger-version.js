@@ -1,5 +1,3 @@
-import TransportU2F from '@ledgerhq/hw-transport-u2f';
-import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
 import hw from './hw';
 import {ledgerTransport} from './ledger';
 
@@ -9,7 +7,7 @@ const RECHECK_TIMEOUT = 1000;
 const getLedgerDeviceInfo = async() => {
   return new Promise(async(resolve, reject) => {
     if (!ledgerTransport) {
-      const transport = window.location.href.indexOf('ledger-webusb') > -1 ? await TransportWebUSB.create() : await TransportU2F.create();
+      const transport = window.location.href.indexOf('ledger-webusb') > -1 ? await hw.ledger.transportOptions.webusb.create() : await hw.ledger.transportOptions.u2f.create();
       hw.ledger.setLedgerTransport(transport);
     }
     let mcuVersion, targetId, fwVersion;
@@ -58,7 +56,7 @@ const getLedgerDeviceInfo = async() => {
         // re-init transport if connection is lost
         if (e.name === 'DisconnectedDeviceDuringOperation') {
           ledgerTransport.close();
-          const transport = window.location.href.indexOf('ledger-webusb') > -1 ? await TransportWebUSB.create() : await TransportU2F.create();
+          const transport = window.location.href.indexOf('ledger-webusb') > -1 ? await hw.ledger.transportOptions.webusb.create() : await hw.ledger.transportOptions.u2f.create();
           hw.ledger.setLedgerTransport(transport);
         }
         console.warn(e);
@@ -71,7 +69,7 @@ const getLedgerDeviceInfo = async() => {
 const getLedgerAppInfo = async() => {
   return new Promise(async(resolve, reject) => {    
     if (!ledgerTransport) {
-      const transport = window.location.href.indexOf('ledger-webusb') > -1 ? await TransportWebUSB.create() : await TransportU2F.create();
+      const transport = window.location.href.indexOf('ledger-webusb') > -1 ? await hw.ledger.transportOptions.webusb.create() : await hw.ledger.transportOptions.u2f.create();
       hw.ledger.setLedgerTransport(transport);
     }
 
@@ -105,7 +103,7 @@ const getLedgerAppInfo = async() => {
         // re-init transport if connection is lost
         if (e.name === 'DisconnectedDeviceDuringOperation') {
           ledgerTransport.close();
-          const transport = window.location.href.indexOf('ledger-webusb') > -1 ? await TransportWebUSB.create() : await TransportU2F.create();
+          const transport = window.location.href.indexOf('ledger-webusb') > -1 ? await hw.ledger.transportOptions.webusb.create() : await hw.ledger.transportOptions.u2f.create();
           hw.ledger.setLedgerTransport(transport);
         }
       }

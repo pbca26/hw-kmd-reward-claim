@@ -100,7 +100,7 @@ class App extends React.Component {
       'ledgerFWVersion': e.hasOwnProperty('target') ? e.target.value : e,
     });
 
-    hw.setLedgerFWVersion(e.hasOwnProperty('target') ? e.target.value : e);
+    hw.ledger.setLedgerFWVersion(e.hasOwnProperty('target') ? e.target.value : e);
   }
 
   updateExplorerEndpoint(e) {
