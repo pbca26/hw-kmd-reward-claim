@@ -6,7 +6,7 @@ export const setExplorerUrl = (name) => {
   explorerUrl = INSIGHT_API_URL[name];
 };
 
-const get = async (endpoint, postData) => {
+const req = async (endpoint, postData) => {
   const opts = {};
 
   if (postData) {
@@ -29,17 +29,17 @@ const get = async (endpoint, postData) => {
   return body;
 };
 
-const getAddress = address => get(`addr/${address}/?noTxList=1`);
+const getAddress = address => req(`addr/${address}/?noTxList=1`);
 
-const getUtxos = addresses => get(`addrs/utxo`, {addrs: addresses.join(',')});
+const getUtxos = addresses => req(`addrs/utxo`, {addrs: addresses.join(',')});
 
-const getTransaction = txid => get(`tx/${txid}`);
+const getTransaction = txid => req(`tx/${txid}`);
 
-const getRawTransaction = txid => get(`rawtx/${txid}`);
+const getRawTransaction = txid => req(`rawtx/${txid}`);
 
-const getBestBlockHash = () => get('status?q=getBestBlockHash');
+const getBestBlockHash = () => req('status?q=getBestBlockHash');
 
-const getBlock = blockHash => get(`block/${blockHash}`);
+const getBlock = blockHash => req(`block/${blockHash}`);
 
 const getTipTime = async () => {
   const {bestblockhash} = await getBestBlockHash();
@@ -48,7 +48,7 @@ const getTipTime = async () => {
   return block.time;
 };
 
-const broadcast = transaction => get('tx/send', {rawtx: transaction});
+const broadcast = transaction => req('tx/send', {rawtx: transaction});
 
 export const getInfo = async (explorerUrl) => {
   try {
@@ -68,7 +68,7 @@ export const getInfo = async (explorerUrl) => {
 };
 
 const blockchain = {
-  get,
+  getInfo,
   getAddress,
   getUtxos,
   getTransaction,

@@ -12,10 +12,22 @@ import {repository} from '../package.json';
 import './App.scss';
 import TrezorConnect from 'trezor-connect';
 import hw from './lib/hw';
-import {getLocalStorageVar, setLocalStorageVar} from './localstorage-util';
-import {INSIGHT_API_URL, LEDGER_FW_VERSIONS, VENDOR} from './constants';
-import {setExplorerUrl, getInfo} from './lib/blockchain';
+import {
+  getLocalStorageVar,
+  setLocalStorageVar,
+} from './localstorage-util';
+import {
+  INSIGHT_API_URL,
+  LEDGER_FW_VERSIONS,
+  VENDOR,
+} from './constants';
+import {
+  setExplorerUrl,
+  getInfo,
+} from './lib/blockchain';
 import {isMobile} from 'react-device-detect';
+
+const MAX_TIP_TIME_DIFF = 3600 * 24;
 
 class App extends React.Component {
   state = this.initialState;
@@ -64,7 +76,7 @@ class App extends React.Component {
 
     // limit mobile support to ledger webusb only
     if (isMobile) {
-      hw.setLedgerFWVersion('webusb');
+      hw.ledger.setLedgerFWVersion('webusb');
 
       this.setState({
         vendor: 'ledger',
@@ -80,7 +92,7 @@ class App extends React.Component {
       'ledgerDeviceType': type,
     });
 
-    if (type === 'x') hw.setLedgerFWVersion('webusb');
+    if (type === 'x') hw.ledger.setLedgerFWVersion('webusb');
   }
 
   updateLedgerFWVersion = (e) => {
@@ -97,6 +109,20 @@ class App extends React.Component {
     });
 
     setExplorerUrl(e.target.value);
+  }
+
+  checkTipTime(tiptime) {
+    if (!tiptime || Number(tiptime) <= 0) return tiptime;
+
+    const currentTimestamp = Date.now() / 1000;
+    const secondsDiff = Math.floor(Number(currentTimestamp) - Number(tiptime));
+
+    if (Math.abs(secondsDiff) < MAX_TIP_TIME_DIFF) {
+      return tiptime;
+    } else {
+      console.warn('tiptime vs local time is too big, use local time to calc rewards!');
+      return currentTimestamp;
+    }
   }
 
   checkExplorerEndpoints = async () => {
@@ -123,14 +149,15 @@ class App extends React.Component {
   };
 
   resetState = () => {
-    hw.setVendor();
     this.setVendor();
     this.setState(this.initialState);
+    // TODO: auto-close connection after idle time
+    hw.ledger.resetTransport();
 
     // limit mobile support to ledger webusb only
     if (isMobile) {
       setTimeout(() => {
-        hw.setLedgerFWVersion('webusb');
+        hw.ledger.setLedgerFWVersion('webusb');
 
         this.setState({
           vendor: 'ledger',
@@ -142,6 +169,8 @@ class App extends React.Component {
   }
 
   handleRewardData = ({accounts, tiptime}) => {
+    tiptime = this.checkTipTime(tiptime);
+
     this.setState({accounts, tiptime});
   }
 
@@ -275,6 +304,7 @@ class App extends React.Component {
                     {(this.state.vendor === 'trezor' || (this.state.vendor === 'ledger' && this.state.ledgerDeviceType)) &&
                       <CheckRewardsButton
                         handleRewardData={this.handleRewardData}
+                        checkTipTime={this.checkTipTime}
                         vendor={this.state.vendor}>
                         <strong>Check Rewards</strong>
                       </CheckRewardsButton>
@@ -318,7 +348,6 @@ class App extends React.Component {
                   alt={VENDOR[this.state.vendor]} />
                 {!isMobile &&
                  this.state.vendor === 'ledger' &&
-                 (!this.state.ledgerDeviceType || this.state.ledgerDeviceType === 's') &&
                   <div className="ledger-device-selector">
                     <div className="ledger-device-selector-buttons">
                       <button
@@ -334,7 +363,7 @@ class App extends React.Component {
                         Nano X
                       </button>
                     </div>
-                    {this.state.ledgerDeviceType === 's' &&
+                    {this.state.ledgerDeviceType &&
                       <div className="ledger-fw-version-selector-block">
                         Mode
                         <select
@@ -342,11 +371,11 @@ class App extends React.Component {
                           name="ledgerFWVersion"
                           value={this.state.ledgerFWVersion}
                           onChange={(event) => this.updateLedgerFWVersion(event)}>
-                          {Object.keys(LEDGER_FW_VERSIONS).map((val, index) => (
+                          {Object.keys(LEDGER_FW_VERSIONS[`nano_${this.state.ledgerDeviceType}`]).map((val, index) => (
                             <option
-                              key={`ledger-fw-selector-${val}`}
+                              key={`ledger-fw-selector-${val}-${this.state.ledgerDeviceType}`}
                               value={val}>
-                              {LEDGER_FW_VERSIONS[val]}
+                              {LEDGER_FW_VERSIONS[`nano_${this.state.ledgerDeviceType}`][val]}
                             </option>
                           ))}
                         </select>

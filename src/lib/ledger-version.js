@@ -1,6 +1,7 @@
 import TransportU2F from '@ledgerhq/hw-transport-u2f';
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
-import hw, {ledgerTransport} from './hw';
+import hw from './hw';
+import {ledgerTransport} from './ledger';
 
 const RECHECK_TIMEOUT = 1000;
 
@@ -9,7 +10,7 @@ const getLedgerDeviceInfo = async() => {
   return new Promise(async(resolve, reject) => {
     if (!ledgerTransport) {
       const transport = window.location.href.indexOf('ledger-webusb') > -1 ? await TransportWebUSB.create() : await TransportU2F.create();
-      hw.setLedgerTransport(transport);
+      hw.ledger.setLedgerTransport(transport);
     }
     let mcuVersion, targetId, fwVersion;
     let checkPassed = false;
@@ -58,7 +59,7 @@ const getLedgerDeviceInfo = async() => {
         if (e.name === 'DisconnectedDeviceDuringOperation') {
           ledgerTransport.close();
           const transport = window.location.href.indexOf('ledger-webusb') > -1 ? await TransportWebUSB.create() : await TransportU2F.create();
-          hw.setLedgerTransport(transport);
+          hw.ledger.setLedgerTransport(transport);
         }
         console.warn(e);
       }
@@ -71,7 +72,7 @@ const getLedgerAppInfo = async() => {
   return new Promise(async(resolve, reject) => {    
     if (!ledgerTransport) {
       const transport = window.location.href.indexOf('ledger-webusb') > -1 ? await TransportWebUSB.create() : await TransportU2F.create();
-      hw.setLedgerTransport(transport);
+      hw.ledger.setLedgerTransport(transport);
     }
 
     const interval = setInterval(async() => {
@@ -105,7 +106,7 @@ const getLedgerAppInfo = async() => {
         if (e.name === 'DisconnectedDeviceDuringOperation') {
           ledgerTransport.close();
           const transport = window.location.href.indexOf('ledger-webusb') > -1 ? await TransportWebUSB.create() : await TransportU2F.create();
-          hw.setLedgerTransport(transport);
+          hw.ledger.setLedgerTransport(transport);
         }
       }
     }, RECHECK_TIMEOUT);
