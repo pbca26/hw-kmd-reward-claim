@@ -2,6 +2,7 @@ import hw from './hw';
 import {ledgerTransport} from './ledger';
 
 const RECHECK_TIMEOUT = 1000;
+let getLedgerDeviceInfoInterval, getLedgerAppInfoInterval;
 
 // ref: https://github.com/LedgerHQ/ledger-live-common/blob/master/src/hw/getVersion.js
 const getLedgerDeviceInfo = async() => {
@@ -13,7 +14,7 @@ const getLedgerDeviceInfo = async() => {
     let mcuVersion, targetId, fwVersion;
     let checkPassed = false;
 
-    const interval = setInterval(async() => {
+    getLedgerDeviceInfoInterval = setInterval(async() => {
       const transport = ledgerTransport;
       console.warn('transport', ledgerTransport);
       try {
@@ -45,7 +46,7 @@ const getLedgerDeviceInfo = async() => {
         }
         mcuVersion = mcuVersion.toString();
 
-        clearInterval(interval);
+        clearInterval(getLedgerDeviceInfoInterval);
         transport.close();
         resolve({
           mcuVersion,
@@ -73,7 +74,7 @@ const getLedgerAppInfo = async() => {
       hw.ledger.setLedgerTransport(transport);
     }
 
-    const interval = setInterval(async() => {
+    getLedgerAppInfoInterval = setInterval(async() => {
       const transport = ledgerTransport;
       console.warn('transport', ledgerTransport);
       try {
@@ -91,7 +92,7 @@ const getLedgerAppInfo = async() => {
         console.warn('getAppInfo', name);
 
         if (name === 'Komodo') {
-          clearInterval(interval);
+          clearInterval(getLedgerAppInfoInterval);
           transport.close();
           resolve({
             name,
@@ -111,9 +112,22 @@ const getLedgerAppInfo = async() => {
   });
 };
 
+const cancelIntervals = () => {
+  if (getLedgerDeviceInfoInterval) {
+    clearInterval(getLedgerDeviceInfoInterval);
+    getLedgerDeviceInfoInterval = null;
+  }
+  
+  if (getLedgerAppInfoInterval) {
+    clearInterval(getLedgerAppInfoInterval);
+    getLedgerAppInfoInterval = null;
+  }
+};
+
 const ledgerFw = {
   getLedgerDeviceInfo,
   getLedgerAppInfo,
+  cancelIntervals,
 };
 
 export default ledgerFw;

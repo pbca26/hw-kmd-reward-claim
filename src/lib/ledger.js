@@ -39,7 +39,7 @@ const getLedgerFWVersion = () => {
 
 const resetTransport = () => {
   if (ledgerTransport) {
-    ledgerTransport.closeConnection();
+    if (ledgerFWVersion === 'ble') ledgerTransport.closeConnection();
     ledgerTransport = null;
   }
 };
@@ -82,7 +82,9 @@ const isAvailable = async () => {
   const ledger = await getDevice();
 
   try {
-    await ledger.getWalletPublicKey(`m/44'/141'/0'/0/0`, {verify: window.location.href.indexOf('ledger-ble') > -1 || ledgerFWVersion === 'ble'});
+    await ledger.getWalletPublicKey(`m/44'/141'/0'/0/0`, {
+      verify: window.location.href.indexOf('ledger-ble') > -1 || ledgerFWVersion === 'ble',
+    });
     await ledger.close();
     return true;
   } catch (error) {
@@ -92,7 +94,9 @@ const isAvailable = async () => {
 
 const getAddress = async (derivationPath, verify) => {
   const ledger = await getDevice();
-  const {bitcoinAddress} = await ledger.getWalletPublicKey(derivationPath, {verify: window.location.href.indexOf('ledger-ble') > -1 || ledgerFWVersion === 'ble' ? true : verify});
+  const {bitcoinAddress} = await ledger.getWalletPublicKey(derivationPath, {
+    verify: window.location.href.indexOf('ledger-ble') > -1 || ledgerFWVersion === 'ble' ? true : verify,
+  });
   await ledger.close();
 
   return bitcoinAddress;
@@ -112,7 +116,7 @@ const createTransaction = async (utxos, outputs) => {
       isSegwitSupported,
       hasTimestamp,
       hasExtraData,
-      additionals
+      additionals,
     );
     return [tx, utxo.vout];
   }));
@@ -137,7 +141,7 @@ const createTransaction = async (utxos, outputs) => {
     segwit,
     initialTimestamp,
     additionals,
-    expiryHeight
+    expiryHeight,
   );
 
   await ledger.close();
@@ -155,7 +159,7 @@ const getXpub = async derivationPath => {
     depth,
     childNumber,
     publicKey,
-    chainCode
+    chainCode,
   });
   
   await ledger.close();

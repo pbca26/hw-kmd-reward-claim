@@ -75,11 +75,21 @@ class FirmwareCheckModal extends React.Component {
     }
   }
 
+  handleClose = () => {
+    ledgerVersion.cancelIntervals();
+
+    this.setState({
+      show: false,
+    });
+  }
+
   render() {
     if (this.props.vendor === 'trezor') {
       return (
         <Modal
           {...this.state}
+          isCloseable={true}
+          handleClose={this.handleClose}
           title="Warning: Trezor is not up to date"
           show={this.state.show}>
           <p>Your Trezor is not up to date. Please <a target="_blank" rel="noopener noreferrer" href="https://trezor.io">update firmware</a> to the latest available.</p>
@@ -89,9 +99,14 @@ class FirmwareCheckModal extends React.Component {
       return (
         <ActionListModal
           {...this.state}
+          isCloseable={true}
+          handleClose={this.handleClose}
           title="Ledger firmware and app version check"
           show={this.state.show}>
           <p>Please follow steps below to validate your Ledger device firmware and Komodo app version.</p>
+          <p className="text-center" style={{'paddingBottom': '10px'}}>
+            <a onClick={this.handleClose}>Skip this step</a>
+          </p>
         </ActionListModal>
       );
     }
