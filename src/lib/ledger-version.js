@@ -11,12 +11,9 @@ const getLedgerDeviceInfo = async() => {
       const transport = window.location.href.indexOf('ledger-webusb') > -1 ? await hw.ledger.transportOptions.webusb.create() : await hw.ledger.transportOptions.u2f.create();
       hw.ledger.setLedgerTransport(transport);
     }
-    let mcuVersion, targetId, fwVersion;
-    let checkPassed = false;
-
     getLedgerDeviceInfoInterval = setInterval(async() => {
       const transport = ledgerTransport;
-      console.warn('transport', ledgerTransport);
+
       try {
         // only fresh fw versions are handled by this code
         // device info can only be obtained from dashboard
@@ -29,13 +26,9 @@ const getLedgerDeviceInfo = async() => {
         const seVersionLength = data[4];
         const seVersion = Buffer.from(data.slice(5, 5 + seVersionLength)).toString();
         const flagsLength = data[5 + seVersionLength];
-        const flags = Buffer.from(
-          data.slice(5 + seVersionLength + 1, 5 + seVersionLength + 1 + flagsLength)
-        );
-        console.warn(data)
 
         const mcuVersionLength = data[5 + seVersionLength + 1 + flagsLength];
-        mcuVersion = Buffer.from(
+        let mcuVersion = Buffer.from(
           data.slice(
             7 + seVersionLength + flagsLength,
             7 + seVersionLength + flagsLength + mcuVersionLength
@@ -76,20 +69,16 @@ const getLedgerAppInfo = async() => {
 
     getLedgerAppInfoInterval = setInterval(async() => {
       const transport = ledgerTransport;
-      console.warn('transport', ledgerTransport);
+
       try {
         const r = await transport.send(0xb0, 0x01, 0x00, 0x00);
         let i = 0;
-        const format = r[i++];
-        //invariant(format === 1, "getAppAndVersion: format not supported");
         const nameLength = r[i++];
         const name = r.slice(i, (i += nameLength)).toString('ascii');
         const versionLength = r[i++];
         const version = r.slice(i, (i += versionLength)).toString('ascii');
         const flagLength = r[i++];
         const flags = r.slice(i, (i += flagLength));
-
-        console.warn('getAppInfo', name);
 
         if (name === 'Komodo') {
           clearInterval(getLedgerAppInfoInterval);

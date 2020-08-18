@@ -31,15 +31,9 @@ class FirmwareCheckModal extends React.Component {
   };
 
   async componentDidMount() {
-    console.warn(this.props.vendor);
-
     if (this.props.vendor === 'trezor') {
       const trezorFw = await trezorCheckFW();
       const updateTrezorFw = compareVersions.compare(`${trezorFw.major_version}.${trezorFw.minor_version}.${trezorFw.patch_version}`, TREZOR_FW_MIN_VERSION[trezorFw.model], '>=');
-    
-      console.warn('trezorFw', trezorFw);
-      console.warn(`${trezorFw.major_version}.${trezorFw.minor_version}.${trezorFw.patch_version}` + ' vs ' + TREZOR_FW_MIN_VERSION[trezorFw.model]);
-      console.warn();
 
       this.setState({
         show: !updateTrezorFw,
@@ -53,9 +47,6 @@ class FirmwareCheckModal extends React.Component {
       const ledgerFw = await ledgerVersion.getLedgerDeviceInfo();
       const ledgerNanoSFWVersion = compareVersions.compare(ledgerFw.fwVersion, '1.6.0', '>=');
       
-      console.warn(ledgerFw);
-      console.warn(LEDGER_DEVICE_HEX_ENUM[ledgerFw.targetId.toString(16)]);
-
       updateActionState(this, 'connect', true);
       this.props.updateLedgerDeviceType(LEDGER_DEVICE_HEX_ENUM[ledgerFw.targetId.toString(16)]);
 
@@ -64,7 +55,6 @@ class FirmwareCheckModal extends React.Component {
       updateActionState(this, 'komodoApp', 'loading');
 
       const ledgerKMDApp = await ledgerVersion.getLedgerAppInfo();
-      console.warn(ledgerKMDApp);
       const updateLedgerKMDApp = !compareVersions.compare(ledgerKMDApp.version, LEDGER_MIN_APP_VERSION, '>=');
       updateActionState(this, 'komodoApp', true);
       this.setState({

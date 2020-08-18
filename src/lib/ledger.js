@@ -7,22 +7,6 @@ import transport from './ledger-transport';
 let ledgerFWVersion = 'default';
 export let ledgerTransport;
 
-const getUniqueInputs = utxos => {
-  let uniqueInputs = [];
-  let uniqueTxids = [];
-
-  for (let i = 0; i < utxos.length; i++) {
-    if (uniqueTxids.indexOf(utxos[i].txid) === -1) {
-      uniqueTxids.push(utxos[i].txid);
-      uniqueInputs.push(utxos[i]);
-    }
-  }
-
-  console.warn(`total utxos ${utxos.length} | unique utxos ${uniqueTxids.length}`);
-  
-  return uniqueInputs;
-};
-
 const setLedgerTransport = (transport) => {
   ledgerTransport = transport;
   console.warn(ledgerTransport);

@@ -6,7 +6,6 @@ const trezorCheckFW = async () => {
   return new Promise(async(resolve, reject) => {
     const interval = setInterval(async() => {
       const result = await TrezorConnect.getFeatures();
-      console.warn(result);
 
       if (result &&
           result.success === true) {
@@ -30,11 +29,9 @@ const trezorCheckFW = async () => {
           });
         } else {
           console.warn('unable to check trezor firmware version');
-          //resolve(false);
         }
       } else {
         console.warn('unable to check trezor firmware version');
-        //resolve(false);
       }
     }, RECHECK_TIMEOUT);
   });
