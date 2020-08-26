@@ -332,7 +332,7 @@ class App extends React.Component {
                 <div className="container content">
                   <h2>Claim KMD rewards on your <span className="ucfirst">{this.state.vendor}</span> device.</h2>
                   {this.state.vendor === 'ledger' &&
-                    <p>Make sure the KMD app and firmware on your Ledger are up to date, then connect your Ledger, open the KMD app, and click the "Check Rewards" button.</p>
+                    <p>Make sure the KMD app and firmware on your Ledger are up to date, close any apps that might be using connection to your device such as Ledger Live, then connect your Ledger, open the KMD app, and click the "Check Rewards" button.</p>
                   }
                   {this.state.vendor === 'trezor' &&
                     <p>Make sure the firmware on your Trezor are up to date, then connect your Trezor and click the "Check Rewards" button. Please be aware that you'll need to allow popup windows for Trezor to work properly.</p>
