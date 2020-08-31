@@ -5,22 +5,11 @@ import createXpub from './create-xpub';
 import transport from './ledger-transport';
 
 let ledgerFWVersion = 'default';
-let ledgerBLE;
+export let ledgerTransport;
 
-const getUniqueInputs = utxos => {
-  let uniqueInputs = [];
-  let uniqueTxids = [];
-
-  for (let i = 0; i < utxos.length; i++) {
-    if (uniqueTxids.indexOf(utxos[i].txid) === -1) {
-      uniqueTxids.push(utxos[i].txid);
-      uniqueInputs.push(utxos[i]);
-    }
-  }
-
-  console.warn(`total utxos ${utxos.length} | unique utxos ${uniqueTxids.length}`);
-  
-  return uniqueInputs;
+const setLedgerTransport = (transport) => {
+  ledgerTransport = transport;
+  console.warn(ledgerTransport);
 };
 
 const setLedgerFWVersion = name => {
@@ -33,7 +22,10 @@ const getLedgerFWVersion = () => {
 };
 
 const resetTransport = () => {
-  if (ledgerBLE) ledgerBLE.closeConnection();
+  if (ledgerTransport) {
+    if (ledgerFWVersion === 'ble') ledgerTransport.closeConnection();
+    ledgerTransport = null;
+  }
 };
 
 const getDevice = async () => {
@@ -55,17 +47,16 @@ const getDevice = async () => {
     transportType = 'hid';
   }
 
-  if (ledgerBLE && transportType === 'ble') return ledgerBLE;
+  if (ledgerTransport) return ledgerTransport;
 
   newTransport = await transport[transportType].create();
   const ledger = new Btc(newTransport);
 
   ledger.close = () => transportType !== 'ble' ? newTransport.close() : {};
 
-  if (transportType === 'ble' &&
-      !ledgerBLE) {
-    ledgerBLE = ledger;
-    ledgerBLE.closeConnection = () => newTransport.close();
+  if (transportType === 'ble') {
+    ledgerTransport = ledger;
+    ledgerTransport.closeConnection = () => newTransport.close();
   }
 
   return ledger;
@@ -75,7 +66,9 @@ const isAvailable = async () => {
   const ledger = await getDevice();
 
   try {
-    await ledger.getWalletPublicKey(`m/44'/141'/0'/0/0`, {verify: window.location.href.indexOf('ledger-ble') > -1 || ledgerFWVersion === 'ble'});
+    await ledger.getWalletPublicKey(`m/44'/141'/0'/0/0`, {
+      verify: window.location.href.indexOf('ledger-ble') > -1 || ledgerFWVersion === 'ble',
+    });
     await ledger.close();
     return true;
   } catch (error) {
@@ -85,7 +78,9 @@ const isAvailable = async () => {
 
 const getAddress = async (derivationPath, verify) => {
   const ledger = await getDevice();
-  const {bitcoinAddress} = await ledger.getWalletPublicKey(derivationPath, {verify: window.location.href.indexOf('ledger-ble') > -1 || ledgerFWVersion === 'ble' ? true : verify});
+  const {bitcoinAddress} = await ledger.getWalletPublicKey(derivationPath, {
+    verify: window.location.href.indexOf('ledger-ble') > -1 || ledgerFWVersion === 'ble' ? true : verify,
+  });
   await ledger.close();
 
   return bitcoinAddress;
@@ -105,7 +100,7 @@ const createTransaction = async (utxos, outputs) => {
       isSegwitSupported,
       hasTimestamp,
       hasExtraData,
-      additionals
+      additionals,
     );
     return [tx, utxo.vout];
   }));
@@ -130,7 +125,7 @@ const createTransaction = async (utxos, outputs) => {
     segwit,
     initialTimestamp,
     additionals,
-    expiryHeight
+    expiryHeight,
   );
 
   await ledger.close();
@@ -148,7 +143,7 @@ const getXpub = async derivationPath => {
     depth,
     childNumber,
     publicKey,
-    chainCode
+    chainCode,
   });
   
   await ledger.close();
@@ -164,7 +159,9 @@ const ledger = {
   getXpub,
   setLedgerFWVersion,
   getLedgerFWVersion,
+  setLedgerTransport,
   resetTransport,
+  transportOptions: transport,
 };
 
 export default ledger;

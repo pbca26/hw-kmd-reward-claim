@@ -8,7 +8,7 @@ export const KOMODO = {
   messagePrefix: '\x18Komodo Signed Message:\n',
   bip32: {
     public: 0x0488B21E,
-    private: 0x0488ADE4
+    private: 0x0488ADE4,
   },
   consensusBranchId: {
     1: 0x00,
@@ -19,7 +19,7 @@ export const KOMODO = {
   versionGroupId: 0x892F2085,
   pubKeyHash: 0x3C,
   scriptHash: 0x55,
-  wif: 0xBC
+  wif: 0xBC,
 };
 export const LEDGER_FW_VERSIONS = {
   nano_s: {
@@ -34,4 +34,16 @@ export const LEDGER_FW_VERSIONS = {
 export const VENDOR = {
   ledger: 'Ledger',
   trezor: 'Trezor',
+};
+export const TREZOR_FW_MIN_VERSION = {
+  'T': '2.3.1',
+  '1': '1.9.1',
+};
+export const LEDGER_MIN_APP_VERSION = '1.4.0';
+// src: https://gist.github.com/TamtamHero/b7651ffe6f1e485e3886bf4aba673348
+export const LEDGER_DEVICE_HEX_ENUM = {
+  '31100002': 's',
+  '31100003': 's',
+  '31100004': 's',
+  '33000004': 'x',
 };
