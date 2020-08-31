@@ -7,10 +7,12 @@ let getLedgerDeviceInfoInterval, getLedgerAppInfoInterval;
 // ref: https://github.com/LedgerHQ/ledger-live-common/blob/master/src/hw/getVersion.js
 const getLedgerDeviceInfo = async() => {
   return new Promise(async(resolve, reject) => {
+    
     if (!ledgerTransport) {
-      const transport = window.location.href.indexOf('ledger-webusb') > -1 ? await hw.ledger.transportOptions.webusb.create() : await hw.ledger.transportOptions.u2f.create();
+      const transport = await hw.ledger.transportOptions.webusb.create();
       hw.ledger.setLedgerTransport(transport);
     }
+
     getLedgerDeviceInfoInterval = setInterval(async() => {
       const transport = ledgerTransport;
 
@@ -50,7 +52,7 @@ const getLedgerDeviceInfo = async() => {
         // re-init transport if connection is lost
         if (e.name === 'DisconnectedDeviceDuringOperation') {
           ledgerTransport.close();
-          const transport = window.location.href.indexOf('ledger-webusb') > -1 ? await hw.ledger.transportOptions.webusb.create() : await hw.ledger.transportOptions.u2f.create();
+          const transport = await hw.ledger.transportOptions.webusb.create();
           hw.ledger.setLedgerTransport(transport);
         }
         console.warn(e);
@@ -61,9 +63,9 @@ const getLedgerDeviceInfo = async() => {
 
 // ref: https://github.com/LedgerHQ/ledgerjs/issues/365
 const getLedgerAppInfo = async() => {
-  return new Promise(async(resolve, reject) => {    
+  return new Promise(async(resolve, reject) => {   
     if (!ledgerTransport) {
-      const transport = window.location.href.indexOf('ledger-webusb') > -1 ? await hw.ledger.transportOptions.webusb.create() : await hw.ledger.transportOptions.u2f.create();
+      const transport = await hw.ledger.transportOptions.webusb.create();
       hw.ledger.setLedgerTransport(transport);
     }
 
@@ -93,7 +95,7 @@ const getLedgerAppInfo = async() => {
         // re-init transport if connection is lost
         if (e.name === 'DisconnectedDeviceDuringOperation') {
           ledgerTransport.close();
-          const transport = window.location.href.indexOf('ledger-webusb') > -1 ? await hw.ledger.transportOptions.webusb.create() : await hw.ledger.transportOptions.u2f.create();
+          const transport = await hw.ledger.transportOptions.webusb.create();
           hw.ledger.setLedgerTransport(transport);
         }
       }
