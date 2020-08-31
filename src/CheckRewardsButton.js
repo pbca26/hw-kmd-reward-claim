@@ -87,7 +87,7 @@ class CheckRewardsButton extends React.Component {
 
       this.setState({...this.initialState});
     } catch (error) {
-      console.warn(error);
+      if (window.location.href.indexOf('devmode') > -1) console.warn('CheckRewardsButton comp error', error);
       updateActionState(this, currentAction, false);
       this.setState({error: error.message});
     }

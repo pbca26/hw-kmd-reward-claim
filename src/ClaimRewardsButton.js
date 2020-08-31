@@ -148,6 +148,7 @@ class ClaimRewardsButton extends React.Component {
         });
       }
     } catch (error) {
+      if (window.location.href.indexOf('devmode') > -1) console.warn('ClaimRewardsButton comp error', error);
       updateActionState(this, currentAction, false);
       this.setState({error: error.message});
     }

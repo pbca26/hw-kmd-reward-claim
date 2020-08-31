@@ -72,6 +72,7 @@ const isAvailable = async () => {
     await ledger.close();
     return true;
   } catch (error) {
+    if (window.location.href.indexOf('devmode') > -1) console.warn('hw.ledger error', error);
     return false;
   }
 };
