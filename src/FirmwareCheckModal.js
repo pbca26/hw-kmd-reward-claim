@@ -2,6 +2,7 @@ import React from 'react';
 import compareVersions from 'compare-versions';
 import trezorCheckFW from './lib/trezor-hw-version';
 import ledgerVersion from './lib/ledger-version';
+import hw from './lib/hw';
 import {
   TREZOR_FW_MIN_VERSION,
   LEDGER_MIN_APP_VERSION,
@@ -62,6 +63,7 @@ class FirmwareCheckModal extends React.Component {
         show: updateLedgerKMDApp,
         error: updateLedgerKMDApp ? 'Please update Bitcoin and Komodo apps to version 1.4.0 or greater.' : false,
       });
+      hw.ledger.setLedgerTransport();
     }
   }
 
