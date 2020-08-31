@@ -69,6 +69,7 @@ class FirmwareCheckModal extends React.Component {
 
   handleClose = () => {
     ledgerVersion.cancelIntervals();
+    hw.ledger.setLedgerTransport();
 
     this.setState({
       show: false,

@@ -87,7 +87,6 @@ class App extends React.Component {
   }
 
   updateLedgerDeviceType = (type) => {
-    console.warn(type)
     this.setState({
       'ledgerDeviceType': type,
     });
