@@ -8,7 +8,10 @@ import Accounts from './Accounts';
 import WarnU2fCompatibility from './WarnU2fCompatibility';
 import FirmwareCheckModal from './FirmwareCheckModal';
 import Footer from './Footer';
-import {repository} from '../package.json';
+import {
+  repository,
+  version,
+} from '../package.json';
 import './App.scss';
 import TrezorConnect from 'trezor-connect';
 import hw from './lib/hw';
@@ -45,6 +48,7 @@ class App extends React.Component {
   }
 
   componentWillMount() {
+    document.title = `Hardware wallet KMD Rewards Claim (v${version})`;
     // this will work only on localhost
     hw.trezor.init();
 
