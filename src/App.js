@@ -208,6 +208,7 @@ class App extends React.Component {
                   onClick={() => this.setVendor('trezor')} />
               </div>
             </div>
+            <div className="eol-notice">This app is no longer maintained. If you're experiencing issues please use newer version <a target="_blank" rel="noopener noreferrer" href="https://pbca26.github.io/hw-kmd-wallet">https://pbca26.github.io/hw-kmd-wallet</a></div>
           </React.Fragment>
         </section>
 
